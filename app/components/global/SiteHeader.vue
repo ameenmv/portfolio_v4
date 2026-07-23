@@ -38,7 +38,8 @@
 
       <NuxtLink 
         to="/#contact" 
-        class="hidden md:flex items-center justify-center h-10 px-5 rounded-full bg-accent text-bg-primary font-medium text-sm hover:bg-white transition-colors duration-300 btn-special"
+        ref="btnRef"
+        class="hidden md:flex items-center justify-center h-10 px-5 rounded-full bg-accent text-bg-primary font-medium text-sm hover:bg-white transition-colors duration-300 btn-special will-change-transform"
         data-hover-text="Chat"
       >
         Let's Talk
@@ -85,6 +86,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Volume2, VolumeX } from 'lucide-vue-next'
 import { useSound } from '~/composables/useSound'
+import { useMagnetic } from '~/composables/useMagnetic'
 
 const { isMuted, toggleMute } = useSound()
 
@@ -98,6 +100,9 @@ const links = [
 const isMenuOpen = ref(false)
 const hasScrolled = ref(false)
 const headerRef = ref<HTMLElement | null>(null)
+const btnRef = ref<HTMLElement | null>(null)
+
+useMagnetic(btnRef, 0.4)
 
 let lastScrollY = 0
 

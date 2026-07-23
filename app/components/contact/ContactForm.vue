@@ -55,8 +55,9 @@
     </div>
 
     <button 
+      ref="btnRef"
       type="submit" 
-      class="mt-4 w-full md:w-auto self-start px-12 py-4 rounded-full bg-text-primary text-bg-primary font-display font-bold tracking-widest uppercase hover:bg-accent hover:text-bg-primary transition-all duration-300 overflow-hidden relative group btn-special"
+      class="mt-4 w-full md:w-auto self-start px-12 py-4 rounded-full bg-text-primary text-bg-primary font-display font-bold tracking-widest uppercase hover:bg-accent hover:text-bg-primary transition-all duration-300 overflow-hidden relative group btn-special will-change-transform"
       :disabled="isSubmitting"
       data-hover-text="Send"
     >
@@ -73,8 +74,12 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useSound } from '~/composables/useSound'
+import { useMagnetic } from '~/composables/useMagnetic'
 
 const { playType, playSuccess } = useSound()
+const btnRef = ref<HTMLElement | null>(null)
+
+useMagnetic(btnRef, 0.4)
 
 const form = reactive({
   name: '',

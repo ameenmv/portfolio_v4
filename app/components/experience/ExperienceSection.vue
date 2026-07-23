@@ -9,8 +9,8 @@
     </div>
     
     <!-- Horizontal Scroll Container -->
-    <div class="h-screen flex items-center" ref="scrollContainerRef">
-      <div class="flex flex-nowrap h-[80vh] items-center px-6 md:px-24 will-change-transform" ref="horizontalWrapperRef">
+    <div class="h-screen flex items-center overflow-x-hidden" ref="scrollContainerRef">
+      <div class="flex flex-nowrap h-[80vh] items-center px-6 md:px-24 will-change-transform hide-scrollbar" ref="horizontalWrapperRef">
         
         <TimelineCard 
           v-for="(job, index) in experience"

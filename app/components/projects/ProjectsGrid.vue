@@ -17,7 +17,7 @@
       
       <!-- View All CTA -->
       <div class="mt-32 flex justify-center">
-        <NuxtLink to="/projects" class="group flex items-center justify-center w-32 h-32 rounded-full border border-white/20 hover:border-accent hover:bg-accent text-text-primary hover:text-bg-primary transition-all duration-500 font-display font-bold uppercase tracking-widest text-sm btn-special" data-hover-text="Explore">
+        <NuxtLink to="/projects" ref="btnRef" class="group flex items-center justify-center w-32 h-32 rounded-full border border-white/20 hover:border-accent hover:bg-accent text-text-primary hover:text-bg-primary transition-all duration-500 font-display font-bold uppercase tracking-widest text-sm btn-special will-change-transform" data-hover-text="Explore">
           <span class="group-hover:scale-110 transition-transform duration-500">View All</span>
         </NuxtLink>
       </div>
@@ -26,8 +26,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import SectionIntro from '../ui/SectionIntro.vue'
 import ProjectCard from './ProjectCard.vue'
+import { useMagnetic } from '~/composables/useMagnetic'
+
+const btnRef = ref<HTMLElement | null>(null)
+useMagnetic(btnRef, 0.4)
 
 const projects = [
   {
@@ -35,28 +40,28 @@ const projects = [
     slug: 'saaf',
     role: 'Frontend Developer',
     tags: ['Nuxt 3', 'TypeScript', 'Tailwind'],
-    image: '/images/projects/saaf.png'
+    image: ''
   },
   {
     title: 'Haze Clue',
     slug: 'haze-clue',
     role: 'Frontend Developer',
     tags: ['Vue.js', 'WebSockets', 'GSAP'],
-    image: '/images/projects/haze-clue.png'
+    image: ''
   },
   {
     title: 'Sa5er CLI',
     slug: 'sa5er-cli',
     role: 'Creator',
     tags: ['Node.js', 'AI', 'CLI'],
-    image: '/images/projects/sa5er-cli.png'
+    image: ''
   },
   {
     title: 'Smart Learn',
     slug: 'smart-learn',
     role: 'Full Stack',
     tags: ['Nuxt.js', 'NestJS', 'MongoDB'],
-    image: '/images/projects/smart-learn.png'
+    image: ''
   }
 ]
 </script>
