@@ -1,9 +1,0 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  body {
-    @apply bg-[#FFF7F0] text-[#0b1311] font-sans antialiased;
-  }
-}
