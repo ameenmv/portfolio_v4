@@ -5,6 +5,7 @@
         type="text" 
         id="name" 
         v-model="form.name" 
+        @input="playType"
         required
         class="w-full bg-transparent border-b border-white/20 py-4 px-2 text-text-primary text-lg focus:outline-none focus:border-accent transition-colors peer"
         placeholder=" "
@@ -22,6 +23,7 @@
         type="email" 
         id="email" 
         v-model="form.email" 
+        @input="playType"
         required
         class="w-full bg-transparent border-b border-white/20 py-4 px-2 text-text-primary text-lg focus:outline-none focus:border-accent transition-colors peer"
         placeholder=" "
@@ -38,6 +40,7 @@
       <textarea 
         id="message" 
         v-model="form.message" 
+        @input="playType"
         required
         rows="4"
         class="w-full bg-transparent border-b border-white/20 py-4 px-2 text-text-primary text-lg focus:outline-none focus:border-accent transition-colors peer resize-none"
@@ -53,7 +56,7 @@
 
     <button 
       type="submit" 
-      class="mt-4 w-full md:w-auto self-start px-12 py-4 rounded-full bg-text-primary text-bg-primary font-display font-bold tracking-widest uppercase hover:bg-accent hover:text-bg-primary transition-colors duration-300 overflow-hidden relative group"
+      class="mt-4 w-full md:w-auto self-start px-12 py-4 rounded-full bg-text-primary text-bg-primary font-display font-bold tracking-widest uppercase hover:bg-accent hover:text-bg-primary transition-all duration-300 overflow-hidden relative group btn-special"
       :disabled="isSubmitting"
       data-hover-text="Send"
     >
@@ -69,6 +72,9 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import { useSound } from '~/composables/useSound'
+
+const { playType, playSuccess } = useSound()
 
 const form = reactive({
   name: '',
@@ -84,6 +90,8 @@ const handleSubmit = async () => {
   
   // Simulate network request since user requested front-end only for now
   await new Promise(resolve => setTimeout(resolve, 1500))
+  
+  playSuccess()
   
   success.value = true
   isSubmitting.value = false

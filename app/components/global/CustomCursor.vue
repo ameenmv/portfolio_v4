@@ -40,8 +40,10 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { useReducedMotion } from '~/composables/useReducedMotion'
+import { useSound } from '~/composables/useSound'
 
 const { isReducedMotion } = useReducedMotion()
+const { playTick, playClick, initAudio } = useSound()
 const cursorDot = ref<HTMLElement | null>(null)
 const cursorRing = ref<HTMLElement | null>(null)
 const cursorRingVisual = ref<HTMLElement | null>(null)
@@ -65,6 +67,17 @@ let velY = 0
 const onMouseMove = (e: MouseEvent) => {
   mouseX = e.clientX
   mouseY = e.clientY
+}
+
+const onClick = (e: MouseEvent) => {
+  // Ensure audio context is initialized on first user interaction
+  initAudio()
+  
+  const target = e.target as HTMLElement
+  const clickable = target.closest('a, button, [data-hover-text]')
+  if (clickable) {
+    playClick()
+  }
 }
 
 const updateCursor = () => {
@@ -129,6 +142,9 @@ const onMouseOver = (e: MouseEvent) => {
   const clickable = target.closest('a, button, [data-hover-text]')
   
   if (clickable) {
+    if (!isHovering.value) {
+      playTick() // Play tick sound when entering hover state
+    }
     isHovering.value = true
     const text = clickable.getAttribute('data-hover-text')
     hoverText.value = text || 'Explore'
@@ -161,6 +177,7 @@ onMounted(() => {
     window.addEventListener('mousemove', onMouseMove)
     document.addEventListener('mouseover', onMouseOver)
     document.addEventListener('mouseout', onMouseOut)
+    document.addEventListener('click', onClick)
     
     requestAnimationFrame(updateCursor)
   }
@@ -170,5 +187,6 @@ onUnmounted(() => {
   window.removeEventListener('mousemove', onMouseMove)
   document.removeEventListener('mouseover', onMouseOver)
   document.removeEventListener('mouseout', onMouseOut)
+  document.removeEventListener('click', onClick)
 })
 </script>

@@ -62,6 +62,21 @@
   }
 }
 
+@layer components {
+  .btn-special {
+    @apply border border-white/20 transition-all duration-300;
+    box-shadow: 4px 4px 0 0 var(--accent);
+  }
+  .btn-special:hover {
+    box-shadow: 6px 6px 0 0 var(--accent);
+    transform: translate(-2px, -2px);
+  }
+  .btn-special:active {
+    box-shadow: 0px 0px 0 0 var(--accent);
+    transform: translate(4px, 4px);
+  }
+}
+
 /* Page Transitions */
 .page-enter-active,
 .page-leave-active {

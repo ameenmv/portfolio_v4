@@ -17,7 +17,7 @@
       
       <!-- View All CTA -->
       <div class="mt-32 flex justify-center">
-        <NuxtLink to="/projects" class="group flex items-center justify-center w-32 h-32 rounded-full border border-white/20 hover:border-accent hover:bg-accent text-text-primary hover:text-bg-primary transition-all duration-500 font-display font-bold uppercase tracking-widest text-sm" data-hover-text="Explore">
+        <NuxtLink to="/projects" class="group flex items-center justify-center w-32 h-32 rounded-full border border-white/20 hover:border-accent hover:bg-accent text-text-primary hover:text-bg-primary transition-all duration-500 font-display font-bold uppercase tracking-widest text-sm btn-special" data-hover-text="Explore">
           <span class="group-hover:scale-110 transition-transform duration-500">View All</span>
         </NuxtLink>
       </div>
@@ -35,28 +35,28 @@ const projects = [
     slug: 'saaf',
     role: 'Frontend Developer',
     tags: ['Nuxt 3', 'TypeScript', 'Tailwind'],
-    image: ''
+    image: '/images/projects/saaf.png'
   },
   {
     title: 'Haze Clue',
     slug: 'haze-clue',
     role: 'Frontend Developer',
     tags: ['Vue.js', 'WebSockets', 'GSAP'],
-    image: ''
+    image: '/images/projects/haze-clue.png'
   },
   {
     title: 'Sa5er CLI',
     slug: 'sa5er-cli',
     role: 'Creator',
     tags: ['Node.js', 'AI', 'CLI'],
-    image: ''
+    image: '/images/projects/sa5er-cli.png'
   },
   {
     title: 'Smart Learn',
     slug: 'smart-learn',
     role: 'Full Stack',
     tags: ['Nuxt.js', 'NestJS', 'MongoDB'],
-    image: ''
+    image: '/images/projects/smart-learn.png'
   }
 ]
 </script>

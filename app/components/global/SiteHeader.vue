@@ -25,9 +25,20 @@
 
     <!-- CTA & Mobile Toggle -->
     <div class="flex items-center gap-4">
+      <!-- Sound Toggle -->
+      <button 
+        class="hidden md:flex items-center justify-center w-10 h-10 rounded-full border border-white/10 text-text-secondary hover:text-accent hover:border-accent transition-colors duration-300"
+        @click="toggleMute"
+        data-hover-text="Sound"
+        :aria-label="isMuted ? 'Unmute Sound' : 'Mute Sound'"
+      >
+        <Volume2 v-if="!isMuted" class="w-4 h-4" />
+        <VolumeX v-else class="w-4 h-4" />
+      </button>
+
       <NuxtLink 
-        to="/contact" 
-        class="hidden md:flex items-center justify-center h-10 px-5 rounded-full bg-accent text-bg-primary font-medium text-sm hover:bg-white transition-colors duration-300"
+        to="/#contact" 
+        class="hidden md:flex items-center justify-center h-10 px-5 rounded-full bg-accent text-bg-primary font-medium text-sm hover:bg-white transition-colors duration-300 btn-special"
         data-hover-text="Chat"
       >
         Let's Talk
@@ -72,6 +83,10 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Volume2, VolumeX } from 'lucide-vue-next'
+import { useSound } from '~/composables/useSound'
+
+const { isMuted, toggleMute } = useSound()
 
 const links = [
   { name: 'Work', path: '/#work' },
