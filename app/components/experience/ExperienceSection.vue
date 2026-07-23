@@ -108,10 +108,10 @@ onMounted(() => {
       scrollTrigger: {
         trigger: scrollContainerRef.value,
         start: "top top",
-        end: () => `+=${getScrollAmount() * -1}`,
+        end: () => `+=${Math.abs(getScrollAmount())}`,
         pin: true,
-        animation: scrollTween || undefined,
         scrub: 1,
+        anticipatePin: 1,
         invalidateOnRefresh: true
       }
     })
