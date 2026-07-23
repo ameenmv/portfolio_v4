@@ -77,7 +77,7 @@ const links = [
   { name: 'Work', path: '/#work' },
   { name: 'About', path: '/about' },
   { name: 'Open Source', path: '/open-source' },
-  { name: 'Contact', path: '/contact' }
+  { name: 'Contact', path: '#contact' }
 ]
 
 const isMenuOpen = ref(false)
