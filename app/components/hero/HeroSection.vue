@@ -94,19 +94,27 @@ onMounted(() => {
   if (titleRef.value) {
     const words = titleRef.value.querySelectorAll('.title-word')
     
-    gsap.to(words[0], {
-      scrollTrigger: { trigger: titleRef.value, start: "top 40%", end: "bottom top", scrub: 1 },
-      xPercent: -40,
-      opacity: 0,
-      rotateZ: -5
-    })
+    gsap.fromTo(words[0], 
+      { xPercent: 0, opacity: 1, rotateZ: 0 },
+      {
+        scrollTrigger: { trigger: titleRef.value, start: "top 20%", end: "bottom top", scrub: 1 },
+        xPercent: -40,
+        opacity: 0,
+        rotateZ: -5,
+        immediateRender: false
+      }
+    )
     
-    gsap.to(words[1], {
-      scrollTrigger: { trigger: titleRef.value, start: "top 40%", end: "bottom top", scrub: 1 },
-      xPercent: 40,
-      opacity: 0,
-      rotateZ: 5
-    })
+    gsap.fromTo(words[1], 
+      { xPercent: 0, opacity: 1, rotateZ: 0 },
+      {
+        scrollTrigger: { trigger: titleRef.value, start: "top 20%", end: "bottom top", scrub: 1 },
+        xPercent: 40,
+        opacity: 0,
+        rotateZ: 5,
+        immediateRender: false
+      }
+    )
   }
 })
 </script>
