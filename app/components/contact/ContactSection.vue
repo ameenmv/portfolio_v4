@@ -25,8 +25,8 @@
               <span class="text-sm font-mono tracking-widest text-text-secondary block mb-4 uppercase">Social</span>
               <div class="flex gap-6">
                 <a href="https://github.com/ameeenmv" target="_blank" class="text-text-primary hover:text-accent transition-colors underline-offset-4 hover:underline" data-hover-text="GitHub">GitHub</a>
-                <a href="https://linkedin.com" target="_blank" class="text-text-primary hover:text-accent transition-colors underline-offset-4 hover:underline" data-hover-text="LinkedIn">LinkedIn</a>
-                <a href="https://youtube.com" target="_blank" class="text-text-primary hover:text-accent transition-colors underline-offset-4 hover:underline" data-hover-text="YouTube">YouTube</a>
+                <a href="https://linkedin.com/in/ameeenmv" target="_blank" class="text-text-primary hover:text-accent transition-colors underline-offset-4 hover:underline" data-hover-text="LinkedIn">LinkedIn</a>
+                <a href="https://youtube.com/@ameeenmv" target="_blank" class="text-text-primary hover:text-accent transition-colors underline-offset-4 hover:underline" data-hover-text="YouTube">YouTube</a>
               </div>
             </div>
             

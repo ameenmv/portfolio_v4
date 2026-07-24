@@ -27,10 +27,10 @@
       </h1>
       
       <div ref="subtitleRef" class="mt-8 overflow-hidden flex flex-col items-center clip-reveal">
-        <p class="text-xl md:text-3xl font-medium tracking-wide text-text-primary mix-blend-difference">
-          Front-End Developer
+        <p class="text-xl md:text-3xl font-medium tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-accent to-accent-cool mix-blend-difference mb-4">
+          I build interfaces that feel alive.
         </p>
-        <div class="flex items-center gap-3 mt-4 text-xs md:text-sm font-mono tracking-widest text-text-secondary/60">
+        <div class="flex items-center gap-3 text-xs md:text-sm font-mono tracking-widest text-text-secondary/60">
           <span>VUE.JS</span>
           <span class="w-1 h-1 rounded-full bg-accent"></span>
           <span>NUXT.JS</span>

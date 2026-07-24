@@ -34,25 +34,26 @@
         <!-- Image/Visual -->
         <div class="lg:col-span-5 order-1 lg:order-2" ref="imageRef">
           <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden clip-reveal bg-bg-elevated">
-            <!-- Placeholder for Ameen's photo -->
-            <div class="absolute inset-0 flex flex-col items-center justify-center border border-white/5 rounded-2xl">
-              <span class="text-text-secondary font-mono text-sm opacity-50">[ Profile Image ]</span>
-              <span class="text-xs text-text-secondary opacity-30 mt-2">Will be updated with your photo</span>
-            </div>
+            <NuxtImg 
+              src="/ameen.jpg" 
+              alt="Ameen Mohamed" 
+              class="w-full h-full object-cover" 
+              loading="lazy" 
+            />
           </div>
           
           <!-- Stats Row -->
           <div class="grid grid-cols-3 gap-4 mt-8">
             <div class="flex flex-col gap-1">
-              <span class="text-3xl font-display font-bold text-text-primary">15+</span>
+              <AnimatedCounter :target="15" suffix="+" :delay="0.2" />
               <span class="text-[10px] font-mono text-text-secondary uppercase tracking-widest">Projects</span>
             </div>
             <div class="flex flex-col gap-1">
-              <span class="text-3xl font-display font-bold text-text-primary">840+</span>
+              <AnimatedCounter :target="840" suffix="+" :delay="0.3" />
               <span class="text-[10px] font-mono text-text-secondary uppercase tracking-widest">Components</span>
             </div>
             <div class="flex flex-col gap-1">
-              <span class="text-3xl font-display font-bold text-text-primary">150+</span>
+              <AnimatedCounter :target="150" suffix="+" :delay="0.4" />
               <span class="text-[10px] font-mono text-text-secondary uppercase tracking-widest">Mentees</span>
             </div>
           </div>
@@ -68,6 +69,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import SectionIntro from '../ui/SectionIntro.vue'
 import TextReveal from '../ui/TextReveal.vue'
+import AnimatedCounter from '../ui/AnimatedCounter.vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
 
 const imageRef = ref<HTMLElement | null>(null)
@@ -79,9 +81,12 @@ onMounted(() => {
     return
   }
 
-  const el = imageRef.value?.querySelector('.clip-reveal')
-  if (el) {
-    gsap.to(el, {
+  const container = imageRef.value?.querySelector('.clip-reveal')
+  const img = imageRef.value?.querySelector('img')
+  
+  if (container) {
+    // Entrance Reveal
+    gsap.to(container, {
       scrollTrigger: {
         trigger: imageRef.value,
         start: 'top 80%'
@@ -90,6 +95,24 @@ onMounted(() => {
       duration: 1.5,
       ease: 'power4.inOut'
     })
+    
+    // Parallax effect on image
+    if (img) {
+      gsap.fromTo(img, 
+        { scale: 1.2, yPercent: -10 },
+        {
+          scrollTrigger: {
+            trigger: imageRef.value,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+          },
+          scale: 1,
+          yPercent: 10,
+          ease: 'none'
+        }
+      )
+    }
   }
 })
 </script>

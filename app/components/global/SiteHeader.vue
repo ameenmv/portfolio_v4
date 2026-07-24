@@ -4,10 +4,16 @@
     class="fixed top-0 left-0 w-full z-50 h-[var(--header-height)] flex items-center justify-between px-6 md:px-12 transition-transform duration-500 will-change-transform"
     :class="{ 'backdrop-blur-md bg-bg-primary/70 border-b border-white/5': hasScrolled }"
   >
-    <!-- Logo -->
-    <NuxtLink to="/" class="font-display font-bold text-2xl tracking-tighter hover:text-accent transition-colors duration-300" data-hover-text="Home">
-      AM.
-    </NuxtLink>
+    <!-- Logo & Status -->
+    <div class="flex items-center gap-6">
+      <NuxtLink to="/" class="font-display font-bold text-2xl tracking-tighter hover:text-accent transition-colors duration-300" data-hover-text="Home">
+        AM.
+      </NuxtLink>
+      <div class="hidden md:flex items-center gap-2 px-3 py-1 rounded-full border border-accent/20 bg-accent/5 backdrop-blur-sm">
+        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+        <span class="text-[10px] font-mono text-accent uppercase tracking-widest">Available for freelance</span>
+      </div>
+    </div>
 
     <!-- Desktop Nav -->
     <nav class="hidden md:flex items-center gap-8">

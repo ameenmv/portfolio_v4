@@ -179,6 +179,9 @@ onMounted(() => {
     document.addEventListener('mouseout', onMouseOut)
     document.addEventListener('click', onClick)
     
+    // Hide default cursor
+    document.body.classList.add('hide-default-cursor')
+    
     requestAnimationFrame(updateCursor)
   }
 })
@@ -188,5 +191,7 @@ onUnmounted(() => {
   document.removeEventListener('mouseover', onMouseOver)
   document.removeEventListener('mouseout', onMouseOut)
   document.removeEventListener('click', onClick)
+  
+  document.body.classList.remove('hide-default-cursor')
 })
 </script>

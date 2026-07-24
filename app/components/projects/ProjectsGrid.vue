@@ -30,38 +30,10 @@ import { ref } from 'vue'
 import SectionIntro from '../ui/SectionIntro.vue'
 import ProjectCard from './ProjectCard.vue'
 import { useMagnetic } from '~/composables/useMagnetic'
+import { useProjectData } from '~/composables/useProjectData'
 
 const btnRef = ref<HTMLElement | null>(null)
 useMagnetic(btnRef, 0.4)
 
-const projects = [
-  {
-    title: 'SAAF',
-    slug: 'saaf',
-    role: 'Frontend Developer',
-    tags: ['Nuxt 3', 'TypeScript', 'Tailwind'],
-    image: ''
-  },
-  {
-    title: 'Haze Clue',
-    slug: 'haze-clue',
-    role: 'Frontend Developer',
-    tags: ['Vue.js', 'WebSockets', 'GSAP'],
-    image: ''
-  },
-  {
-    title: 'Sa5er CLI',
-    slug: 'sa5er-cli',
-    role: 'Creator',
-    tags: ['Node.js', 'AI', 'CLI'],
-    image: ''
-  },
-  {
-    title: 'Smart Learn',
-    slug: 'smart-learn',
-    role: 'Full Stack',
-    tags: ['Nuxt.js', 'NestJS', 'MongoDB'],
-    image: ''
-  }
-]
+const { projects } = useProjectData()
 </script>

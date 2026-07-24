@@ -6,11 +6,13 @@
   >
     <div class="relative w-full h-full flex items-center justify-center">
       <!-- Massive Percentage Text -->
-      <div 
-        ref="textRef" 
-        class="font-display text-[20vw] md:text-[15vw] font-black text-white mix-blend-difference leading-none tracking-tighter will-change-transform"
-      >
-        {{ Math.floor(progress) }}<span class="text-[10vw] md:text-[8vw] text-accent">%</span>
+      <div class="flex flex-col items-center gap-4">
+        <span class="text-6xl md:text-8xl font-display font-bold tabular-nums text-text-primary tracking-tighter mix-blend-difference">
+          {{ Math.round(progress) }}<span class="text-3xl md:text-5xl text-accent">%</span>
+        </span>
+        <span class="text-sm font-mono text-text-secondary tracking-widest uppercase opacity-60">
+          {{ greeting }}
+        </span>
       </div>
       
       <!-- Loading Bar -->
@@ -25,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { gsap } from 'gsap'
 import { useReducedMotion } from '~/composables/useReducedMotion'
 
@@ -34,6 +36,13 @@ const preloaderRef = ref<HTMLElement | null>(null)
 const textRef = ref<HTMLElement | null>(null)
 const progress = ref(0)
 const isDestroyed = ref(false)
+
+const greeting = computed(() => {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'Good Morning ☀️'
+  if (hour < 18) return 'Good Afternoon 🌤️'
+  return 'Good Evening 🌙'
+})
 
 onMounted(() => {
   if (isReducedMotion.value) {
