@@ -153,7 +153,7 @@ const handleSubmit = async () => {
         
         // Reset positions
         gsap.set('.word, input, textarea', { y: 0, opacity: 1, scale: 1 })
-        gsap.set(btnRef.value, { x: 0, scale: 1 })
+        gsap.set(btnRef.value, { x: 0, scale: 1, rotation: 0 })
       }, 5000)
     }
   })
