@@ -9,7 +9,7 @@
 
     <!-- Conversational Form -->
     <form @submit.prevent="handleSubmit" class="w-full transition-opacity duration-700" :class="{ 'opacity-0 pointer-events-none': success, 'form-focused': isFocused }">
-      <h2 class="text-3xl md:text-5xl lg:text-[4.5rem] font-display font-light text-text-primary leading-[1.5] md:leading-[1.6] tracking-tight" ref="textWrapperRef">
+      <h2 class="text-3xl md:text-5xl lg:text-[4.5rem] font-display font-light text-text-primary leading-[1.5] md:leading-[1.6] tracking-tight transform-gpu" style="transform-style: preserve-3d; perspective: 1000px;" ref="textWrapperRef">
         
         <span class="inline-block word">Hello</span> <span class="inline-block word">Ameen,</span> <span class="inline-block word">my</span> <span class="inline-block word">name</span> <span class="inline-block word">is</span>
         
@@ -21,8 +21,9 @@
             @focus="handleFocus"
             @blur="handleBlur"
             required
-            class="bg-transparent border-b-2 border-white/20 text-accent font-medium focus:outline-none focus:border-accent transition-colors text-center min-w-[120px] md:min-w-[200px]"
-            :style="{ width: Math.max(120, form.name.length * 15 + 40) + 'px', maxWidth: '100%' }"
+            data-hover-text="Type"
+            class="bg-transparent border-b-2 border-white/20 text-accent font-medium focus:outline-none focus:border-accent transition-colors text-center min-w-[250px] md:min-w-[400px]"
+            :style="{ width: Math.max(250, form.name.length * 40 + 60) + 'px', maxWidth: '100%' }"
             placeholder="Your Name"
           />
         </div>
@@ -38,7 +39,8 @@
             @blur="handleBlur"
             required
             rows="1"
-            class="bg-transparent border-b-2 border-white/20 text-accent font-medium focus:outline-none focus:border-accent transition-colors resize-none overflow-hidden w-full md:min-w-[400px] leading-[1.5]"
+            data-hover-text="Type"
+            class="bg-transparent border-b-2 border-white/20 text-accent font-medium focus:outline-none focus:border-accent transition-colors resize-none overflow-hidden w-full min-w-[300px] md:min-w-[700px] leading-[1.5]"
             placeholder="discuss a project / say hi"
           ></textarea>
         </div>
@@ -53,8 +55,9 @@
             @focus="handleFocus"
             @blur="handleBlur"
             required
-            class="bg-transparent border-b-2 border-white/20 text-accent font-medium focus:outline-none focus:border-accent transition-colors text-center min-w-[200px] md:min-w-[350px]"
-            :style="{ width: Math.max(200, form.email.length * 15 + 40) + 'px', maxWidth: '100%' }"
+            data-hover-text="Type"
+            class="bg-transparent border-b-2 border-white/20 text-accent font-medium focus:outline-none focus:border-accent transition-colors text-center min-w-[300px] md:min-w-[550px]"
+            :style="{ width: Math.max(300, form.email.length * 40 + 60) + 'px', maxWidth: '100%' }"
             placeholder="Email Address"
           />
         </div>
@@ -62,10 +65,11 @@
         <span class="inline-block word text-accent">.</span>
       </h2>
 
-      <div class="mt-16 md:mt-24 flex justify-end overflow-hidden pt-4" ref="btnContainerRef">
+      <div class="mt-16 md:mt-24 flex justify-end pt-4" ref="btnContainerRef">
         <button 
           ref="btnRef"
           type="submit" 
+          data-hover-text="Send"
           class="w-full md:w-auto px-12 md:px-16 py-5 md:py-6 rounded-full bg-text-primary text-bg-primary font-display font-bold text-lg md:text-xl tracking-widest uppercase hover:bg-accent hover:text-bg-primary transition-all duration-300 overflow-hidden relative group btn-special will-change-transform submit-btn"
           :disabled="isSubmitting"
         >
@@ -78,12 +82,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { useSound } from '~/composables/useSound'
 import { useMagnetic } from '~/composables/useMagnetic'
 
-const { playType, playSuccess } = useSound()
+const { playType, playSuccess, playClick } = useSound()
 
 const containerRef = ref<HTMLElement | null>(null)
 const textWrapperRef = ref<HTMLElement | null>(null)
@@ -113,33 +117,83 @@ const autoResize = (e: Event) => {
 }
 
 const handleSubmit = async () => {
+  if (isSubmitting.value) return
   isSubmitting.value = true
+  playClick() // from useSound if we want a nice click sound, assuming playType is there
   
+  // 1. Text collapses and fades out
+  gsap.to('.word, input, textarea', {
+    y: 20,
+    opacity: 0,
+    scale: 0.9,
+    stagger: 0.02,
+    duration: 0.6,
+    ease: 'power3.in'
+  })
+  
+  // 2. Button transforms into a "paper airplane" and shoots off
+  const tl = gsap.timeline({
+    onComplete: () => {
+      success.value = true
+      isSubmitting.value = false
+      playSuccess()
+      
+      gsap.fromTo('.success-msg', 
+        { y: 50, opacity: 0, scale: 0.9 },
+        { y: 0, opacity: 1, scale: 1, duration: 1, ease: 'elastic.out(1, 0.7)', stagger: 0.1 }
+      )
+      
+      // Reset form silently in background
+      setTimeout(() => {
+        form.name = ''
+        form.email = ''
+        form.message = ''
+        success.value = false
+        if (messageRef.value) messageRef.value.style.height = 'auto'
+        
+        // Reset positions
+        gsap.set('.word, input, textarea', { y: 0, opacity: 1, scale: 1 })
+        gsap.set(btnRef.value, { x: 0, scale: 1 })
+      }, 5000)
+    }
+  })
+  
+  // Button takes off
+  tl.to(btnRef.value, {
+    scale: 0.8,
+    duration: 0.4,
+    ease: 'back.in(1.5)',
+    delay: 0.4
+  })
+  .to(btnRef.value, {
+    x: '150vw',
+    rotation: 15,
+    duration: 0.8,
+    ease: 'power4.inOut'
+  })
+
   // Simulate network request
   await new Promise(resolve => setTimeout(resolve, 1500))
+}
+
+// 3D Parallax Mouse Handler
+const handleMouseMove = (e: MouseEvent) => {
+  if (!textWrapperRef.value || window.innerWidth < 768) return // Disable on mobile
   
-  playSuccess()
+  const x = (e.clientX / window.innerWidth - 0.5) * 2 // -1 to 1
+  const y = (e.clientY / window.innerHeight - 0.5) * 2 // -1 to 1
   
-  success.value = true
-  isSubmitting.value = false
-  
-  // Animate success message in
-  gsap.fromTo('.success-msg', 
-    { y: 50, opacity: 0 },
-    { y: 0, opacity: 1, duration: 0.8, ease: 'power4.out', stagger: 0.1 }
-  )
-  
-  // Reset form
-  setTimeout(() => {
-    form.name = ''
-    form.email = ''
-    form.message = ''
-    success.value = false
-    if (messageRef.value) messageRef.value.style.height = 'auto'
-  }, 5000)
+  gsap.to(textWrapperRef.value, {
+    rotateX: -y * 8, // Max 8 degrees tilt
+    rotateY: x * 8,
+    duration: 1,
+    ease: 'power2.out'
+  })
 }
 
 onMounted(() => {
+  window.addEventListener('mousemove', handleMouseMove)
+  
   // GSAP Entrance Animation
   const tl = gsap.timeline({ delay: 0.2 })
   
@@ -159,6 +213,10 @@ onMounted(() => {
     { y: 0, opacity: 1, duration: 1, ease: 'expo.out' },
     "-=0.5"
   )
+})
+
+onUnmounted(() => {
+  window.removeEventListener('mousemove', handleMouseMove)
 })
 </script>
 

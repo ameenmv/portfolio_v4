@@ -13,7 +13,7 @@
     <!-- Footer Links -->
     <div class="w-full border-t border-white/5 bg-bg-primary/80 backdrop-blur-xl relative z-20">
       <div class="container mx-auto px-6 md:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div class="flex items-center gap-6">
+        <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6">
           <a href="mailto:ameeenmv@gmail.com" class="text-text-secondary hover:text-accent font-mono text-sm tracking-widest uppercase transition-colors" data-hover-text="Email">ameeenmv@gmail.com</a>
         </div>
         
@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useHead, useSeoMeta } from '#imports'
 import { gsap } from 'gsap'
 import ContactForm from '~/components/contact/ContactForm.vue'
@@ -54,6 +54,7 @@ const ambientRef = ref<HTMLElement | null>(null)
 const ambientRef2 = ref<HTMLElement | null>(null)
 
 onMounted(() => {
+
   if (ambientRef.value && ambientRef2.value) {
     gsap.to(ambientRef.value, {
       x: '20vw',
