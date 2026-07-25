@@ -19,13 +19,13 @@
       <h1 
         class="font-display font-bold uppercase text-[10vw] md:text-[8vw] leading-[0.85] tracking-tighter text-center text-text-primary drop-shadow-2xl"
       >
-        <div class="overflow-hidden">
+        <div class="overflow-hidden hero-word-wrapper">
           <span class="inline-block hero-word will-change-transform">THE ARCHITECT</span>
         </div>
-        <div class="overflow-hidden">
+        <div class="overflow-hidden hero-word-wrapper">
           <span class="inline-block hero-word text-accent will-change-transform drop-shadow-xl">BEHIND</span>
         </div>
-        <div class="overflow-hidden">
+        <div class="overflow-hidden hero-word-wrapper">
           <span class="inline-block hero-word will-change-transform">THE INTERFACE</span>
         </div>
       </h1>

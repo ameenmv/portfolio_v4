@@ -2,7 +2,6 @@
   <div class="page-about w-full bg-bg-primary overflow-hidden">
     <!-- Premium Story-driven narrative components -->
     <AboutHero />
-
     <AboutHorizontal />
     <AboutMentorPremium />
   </div>
