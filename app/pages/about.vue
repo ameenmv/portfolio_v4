@@ -26,12 +26,8 @@
       </div>
     </section>
     
-    <!-- Image Break -->
-    <section class="w-full px-6 md:px-12 mb-32">
-      <div class="container mx-auto">
-        <ParallaxMedia class="w-full aspect-video md:aspect-[21/9] rounded-[30px] bg-bg-elevated border border-white/5" />
-      </div>
-    </section>
+    <!-- Scroll Video Section -->
+    <ScrollVideo src="/me.mp4" />
 
     <!-- Mentorship & Community -->
     <section class="py-32 px-6 md:px-12 bg-bg-secondary relative">
@@ -67,19 +63,27 @@
       </div>
     </section>
     
-    <ContactSection />
+   
+    
   </div>
 </template>
 
 <script setup lang="ts">
 import TextReveal from '~/components/ui/TextReveal.vue'
-import ParallaxMedia from '~/components/ui/ParallaxMedia.vue'
+import ScrollVideo from '~/components/ui/ScrollVideo.vue'
 import SectionIntro from '~/components/ui/SectionIntro.vue'
-import ContactSection from '~/components/contact/ContactSection.vue'
-
 useHead({
   title: 'About | Ameen Mohamed'
 })
+
+const certifications = [
+  { name: 'Vue JS - The Complete Guide', issuer: 'Udemy' },
+  { name: 'JavaScript Design Patterns', issuer: 'Udemy' },
+  { name: 'The Complete React Native + Hooks Course', issuer: 'Udemy' },
+  { name: 'Node.js, Express, MongoDB & More', issuer: 'Udemy' },
+  { name: 'The Complete Web Development Bootcamp', issuer: 'Udemy' },
+  { name: 'UI/UX Design Specialization', issuer: 'Coursera' },
+]
 </script>
 
 <style scoped>

@@ -9,7 +9,7 @@
       />
       
       <!-- Stacking Cards Container -->
-      <div class="relative w-full pb-32 max-w-6xl mx-auto">
+      <div class="relative w-full pb-32 max-w-[95%] xl:max-w-[1400px] mx-auto">
         <StackingCard 
           v-for="(skill, index) in skills"
           :key="skill.title"
@@ -35,7 +35,7 @@ const skills = [
   {
     title: 'Frontend Core',
     description: 'Specializing in the Vue ecosystem to build scalable, reactive, and highly performant applications. Deep understanding of modern state management and reactive patterns.',
-    technologies: ['Vue.js', 'Nuxt.js', 'TypeScript', 'Pinia', 'GSAP', 'Vite'],
+    technologies: ['Vue.js', 'Nuxt.js', 'TypeScript', 'Pinia', 'GSAP', 'Vite', 'Webpack'],
     colorClass: 'bg-accent',
     icon: IconFrontend
   },
@@ -56,7 +56,7 @@ const skills = [
   {
     title: 'Architecture & Tools',
     description: 'Setting up projects for long-term success. Implementing CI/CD pipelines, internationalization, and maintaining clean code standards.',
-    technologies: ['Git', 'Docker', 'Testing', 'i18n', 'Clean Architecture', 'Turborepo'],
+    technologies: ['Git', 'Docker', 'CI/CD', 'Testing', 'i18n', 'Clean Architecture', 'Turborepo'],
     colorClass: 'bg-[#b0aea5]', 
     icon: IconArchitecture
   }

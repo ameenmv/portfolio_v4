@@ -23,10 +23,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useHead, useSeoMeta, useNuxtApp, useRouter } from '#imports'
 import SitePreloader from '~/components/global/SitePreloader.vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
-import { useVisibilityMagic } from '~/composables/useVisibilityMagic'
 
 const { isReducedMotion } = useReducedMotion()
-useVisibilityMagic()
 const curtainRef = ref<HTMLElement | null>(null)
 const spinnerRef = ref<HTMLElement | null>(null)
 
@@ -86,7 +84,7 @@ useHead({
     return titleChunk ? `${titleChunk} | Ameen Mohamed` : 'Ameen Mohamed | Front-End Developer'
   },
   link: [
-    { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+    { rel: 'icon', type: 'image/png', href: '/ameeen.png' }
   ]
 })
 

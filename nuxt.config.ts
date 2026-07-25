@@ -54,7 +54,7 @@ export default defineNuxtConfig({
         { hid: 'description', name: 'description', content: 'Mid-Level Front-End Developer specializing in Vue.js & Nuxt.js ecosystems.' }
       ],
       link: [
-        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+        { rel: 'icon', type: 'image/png', href: '/ameeen.png' }
       ]
     }
   },

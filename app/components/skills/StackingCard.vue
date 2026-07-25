@@ -1,32 +1,39 @@
 <template>
   <div class="sticky top-[calc(var(--header-height)+2rem)] w-full pt-6 md:pt-12" ref="cardRef">
     <div 
-      class="w-full rounded-[40px] p-8 md:p-14 shadow-2xl relative overflow-hidden flex flex-col md:flex-row gap-10 lg:gap-20 transition-transform duration-700 will-change-transform origin-top"
+      class="w-full h-[750px] md:h-[500px] lg:h-[600px] xl:h-[650px] rounded-[60px] p-8 md:p-12 lg:p-16 shadow-2xl relative overflow-hidden flex flex-col md:flex-row gap-8 lg:gap-16 transition-transform duration-700 will-change-transform origin-top"
       :class="colorClass"
     >
-      <!-- Icon/Header -->
-      <div class="md:w-1/3 flex flex-col gap-8 relative z-10">
-        <div class="w-20 h-20 rounded-full bg-black/10 flex items-center justify-center backdrop-blur-md border border-black/5">
-          <component :is="icon" class="w-10 h-10 text-bg-primary" />
+      <!-- Left Column (Icon, Title, Description, Link) -->
+      <div class="md:w-2/3 flex flex-col relative z-10 justify-between">
+        
+        <!-- Icon & Title -->
+        <div class="flex items-center gap-6 lg:gap-10 mb-12 md:mb-0">
+          <component :is="icon" class="w-16 h-16 lg:w-24 lg:h-24 text-bg-primary shrink-0" />
+          <h3 class="text-5xl md:text-6xl xl:text-[80px] font-display font-bold text-bg-primary tracking-tighter leading-none -mt-2">{{ title }}</h3>
         </div>
-        <div>
-          <span class="text-bg-primary/60 font-mono text-sm tracking-widest uppercase font-bold mb-3 block">0{{ index + 1 }} //</span>
-          <h3 class="text-4xl lg:text-6xl font-display font-bold text-bg-primary tracking-tighter leading-[0.9]">{{ title }}</h3>
+
+        <!-- Description & Link -->
+        <div class="mt-auto max-w-3xl pt-12 md:pt-20">
+          <p class="text-xl md:text-2xl lg:text-3xl text-bg-primary leading-snug font-medium opacity-90 mb-8">
+            {{ description }}
+          </p>
+          <div class="flex items-center gap-3 text-bg-primary font-bold tracking-widest text-sm md:text-base cursor-pointer hover:opacity-70 transition-opacity uppercase" data-cursor-type="default">
+            Explore
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </div>
         </div>
       </div>
       
-      <!-- Content -->
-      <div class="md:w-2/3 flex flex-col justify-center relative z-10">
-        <p class="text-xl md:text-2xl text-bg-primary opacity-80 leading-relaxed font-medium max-w-2xl">
-          {{ description }}
-        </p>
-        
-        <!-- Tags/Tech -->
-        <div class="flex flex-wrap gap-3 mt-12">
+      <!-- Right Column (Tags) -->
+      <div class="md:w-1/3 flex flex-col justify-end items-start relative z-10 mt-8 md:mt-0">
+        <div class="flex flex-col gap-3 items-start w-full">
           <span 
             v-for="tech in technologies" 
             :key="tech"
-            class="px-5 py-2.5 rounded-full bg-black/10 text-bg-primary text-xs md:text-sm font-mono tracking-widest uppercase font-bold border border-black/5 backdrop-blur-sm shadow-sm"
+            class="px-6 py-3 rounded-full bg-transparent text-bg-primary border border-bg-primary text-sm md:text-base font-medium tracking-wide shadow-sm whitespace-nowrap hover:bg-bg-primary hover:text-text-primary transition-colors cursor-pointer"
           >
             {{ tech }}
           </span>
@@ -70,7 +77,7 @@ onMounted(() => {
         scrub: true
       },
       scale: 0.95,
-      opacity: 0.5,
+      // opacity: 0.5,
       ease: 'none'
     })
   }

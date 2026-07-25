@@ -16,6 +16,7 @@
           v-for="(job, index) in experience"
           :key="index"
           v-bind="job"
+          :index="index"
         />
         
         <!-- End Spacer to ensure last card is fully visible -->
@@ -44,7 +45,7 @@ const experience = [
     company: 'neop',
     date: '12/2025 - Present',
     achievements: [
-      'Developed 15+ robust web applications using Vue.js and Nuxt.js ecosystems.',
+      'Developed 50+ robust web applications using Vue.js and Nuxt.js ecosystems.',
       'Designed architecture and systems to enhance application responsiveness.',
       'Collaborated closely with cross-functional teams to implement efficient APIs.'
     ]

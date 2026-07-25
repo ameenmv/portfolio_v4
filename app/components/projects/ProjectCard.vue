@@ -2,7 +2,7 @@
   <NuxtLink 
     :to="`/projects/${slug}`" 
     class="block group" 
-    data-hover-text="View"
+    data-cursor-type="project"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
   >

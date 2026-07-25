@@ -13,7 +13,7 @@
         <div class="lg:col-span-7 order-2 lg:order-1">
           <div class="space-y-8 text-lg text-text-secondary leading-relaxed">
             <TextReveal :delay="0.2">
-              Currently working at <span class="text-accent font-medium">neop</span>, I specialize in the Vue.js ecosystem. From enterprise fintech solutions to real-time BCI platforms, I've delivered over 15 production applications.
+              Currently working at <span class="text-accent font-medium">neop</span>, I specialize in the Vue.js ecosystem. From enterprise fintech solutions to real-time BCI platforms, I've delivered over 50 production applications.
             </TextReveal>
             <TextReveal :delay="0.3">
               Beyond coding, I lead the Frontend track at CIS Team, mentoring over 150 developers, and share my knowledge through my YouTube channel, Coding with Ameen.
@@ -45,12 +45,12 @@
           <!-- Stats Row -->
           <div class="grid grid-cols-3 gap-4 mt-8">
             <div class="flex flex-col gap-1">
-              <AnimatedCounter :target="15" suffix="+" :delay="0.2" />
+              <AnimatedCounter :target="50" suffix="+" :delay="0.2" />
               <span class="text-[10px] font-mono text-text-secondary uppercase tracking-widest">Projects</span>
             </div>
             <div class="flex flex-col gap-1">
-              <AnimatedCounter :target="840" suffix="+" :delay="0.3" />
-              <span class="text-[10px] font-mono text-text-secondary uppercase tracking-widest">Components</span>
+              <AnimatedCounter :target="3" suffix="+" :delay="0.3" />
+              <span class="text-[10px] font-mono text-text-secondary uppercase tracking-widest">Years Exp.</span>
             </div>
             <div class="flex flex-col gap-1">
               <AnimatedCounter :target="150" suffix="+" :delay="0.4" />
