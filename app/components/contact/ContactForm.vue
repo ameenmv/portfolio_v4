@@ -86,8 +86,10 @@ import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { useSound } from '~/composables/useSound'
 import { useMagnetic } from '~/composables/useMagnetic'
+import { useAnimationTrigger } from '~/composables/useAnimationTrigger'
 
 const { playType, playSuccess, playClick } = useSound()
+const { onReady } = useAnimationTrigger()
 
 const containerRef = ref<HTMLElement | null>(null)
 const textWrapperRef = ref<HTMLElement | null>(null)
@@ -191,33 +193,43 @@ const handleMouseMove = (e: MouseEvent) => {
   })
 }
 
-onMounted(() => {
-  window.addEventListener('mousemove', handleMouseMove)
-  
-  // GSAP Entrance Animation
-  const tl = gsap.timeline({ delay: 0.2 })
-  
-  tl.fromTo('.word', 
-    { y: 50, opacity: 0, rotateZ: 5 },
-    { y: 0, opacity: 1, rotateZ: 0, duration: 1, ease: 'power4.out', stagger: 0.03 }
-  )
-  
-  tl.fromTo('input, textarea', 
-    { scaleX: 0, opacity: 0, transformOrigin: 'left center' },
-    { scaleX: 1, opacity: 1, duration: 0.8, ease: 'power3.out', stagger: 0.1 },
-    "-=0.5"
-  )
-  
-  tl.fromTo('.submit-btn',
-    { y: 100, opacity: 0 },
-    { y: 0, opacity: 1, duration: 1, ease: 'expo.out' },
-    "-=0.5"
-  )
-})
+  let ctx: gsap.Context
 
-onUnmounted(() => {
-  window.removeEventListener('mousemove', handleMouseMove)
-})
+  onMounted(() => {
+    window.addEventListener('mousemove', handleMouseMove)
+    
+    ctx = gsap.context(() => {
+      // 1. Create timeline immediately to record and lock 'from' states
+      const tl = gsap.timeline({ paused: true, delay: 0.2 })
+      
+      tl.fromTo('.word', 
+        { y: 50, opacity: 0, rotateZ: 5 },
+        { y: 0, opacity: 1, rotateZ: 0, duration: 1, ease: 'power4.out', stagger: 0.03 }
+      )
+      
+      tl.fromTo('input, textarea', 
+        { scaleX: 0, opacity: 0, transformOrigin: 'left center' },
+        { scaleX: 1, opacity: 1, duration: 0.8, ease: 'power3.out', stagger: 0.1 },
+        "-=0.5"
+      )
+      
+      tl.fromTo('.submit-btn',
+        { y: 100, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: 'expo.out' },
+        "-=0.5"
+      )
+
+      // 2. Play only when global synchronization allows it
+      onReady(() => {
+        tl.play()
+      })
+    }, textWrapperRef.value?.parentElement || document.body)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('mousemove', handleMouseMove)
+    if (ctx) ctx.revert()
+  })
 </script>
 
 <style scoped>

@@ -48,17 +48,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import HeroScene from './HeroScene.vue'
 import ScrollIndicator from './ScrollIndicator.vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
+import { useAnimationTrigger } from '~/composables/useAnimationTrigger'
 
 const titleRef = ref<HTMLElement | null>(null)
 const subtitleRef = ref<HTMLElement | null>(null)
 const sceneWrapper = ref<HTMLElement | null>(null)
 const { isReducedMotion } = useReducedMotion()
+const { onReady } = useAnimationTrigger()
+
+let ctx: gsap.Context
 
 onMounted(() => {
   if (isReducedMotion.value) {
@@ -68,53 +72,67 @@ onMounted(() => {
     return
   }
 
-  const tl = gsap.timeline()
-  
-  // Entrance animation
-  tl.fromTo('.title-word', 
-    { yPercent: 120, opacity: 0, rotateZ: 5 },
-    { yPercent: 0, opacity: 1, rotateZ: 0, duration: 1.4, stagger: 0.15, ease: 'power4.out', delay: 0.3 }
-  )
-  .to(subtitleRef.value, {
-    clipPath: 'inset(0 0% 0 0)',
-    duration: 1.2,
-    ease: 'power3.inOut'
-  }, "-=0.8")
-
-  // Scroll Parallax Effect
-  ScrollTrigger.create({
-    trigger: sceneWrapper.value,
-    start: "top top",
-    end: "bottom top",
-    scrub: 1,
-    animation: gsap.to(sceneWrapper.value, { yPercent: 40, opacity: 0, scale: 1.1, ease: "none" })
-  })
-
-  // Split Logo/Text effect on scroll (studiomodular reference)
-  if (titleRef.value) {
-    const words = titleRef.value.querySelectorAll('.title-word')
+  ctx = gsap.context(() => {
+    // Create timeline immediately to record initial states
+    const tl = gsap.timeline({ paused: true })
     
-    gsap.fromTo(words[0], 
-      { xPercent: 0, opacity: 1, rotateZ: 0 },
-      {
-        scrollTrigger: { trigger: titleRef.value, start: "top 20%", end: "bottom top", scrub: 1 },
-        xPercent: -40,
-        opacity: 0,
-        rotateZ: -5,
-        immediateRender: false
-      }
+    // Entrance animation
+    tl.fromTo('.title-word', 
+      { yPercent: 120, opacity: 0, rotateZ: 5 },
+      { yPercent: 0, opacity: 1, rotateZ: 0, duration: 1.4, stagger: 0.15, ease: 'power4.out', delay: 0.3 }
     )
     
-    gsap.fromTo(words[1], 
-      { xPercent: 0, opacity: 1, rotateZ: 0 },
-      {
-        scrollTrigger: { trigger: titleRef.value, start: "top 20%", end: "bottom top", scrub: 1 },
-        xPercent: 40,
-        opacity: 0,
-        rotateZ: 5,
-        immediateRender: false
-      }
-    )
-  }
+    if (subtitleRef.value) {
+      tl.fromTo(subtitleRef.value, 
+        { clipPath: 'inset(0 100% 0 0)' },
+        { clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power3.inOut' }, 
+        "-=0.8"
+      )
+    }
+    
+    onReady(() => {
+      tl.play()
+    })
+
+    // Scroll Parallax Effect
+    ScrollTrigger.create({
+      trigger: sceneWrapper.value,
+      start: "top top",
+      end: "bottom top",
+      scrub: 1,
+      animation: gsap.to(sceneWrapper.value, { yPercent: 40, opacity: 0, scale: 1.1, ease: "none" })
+    })
+
+    // Split Logo/Text effect on scroll
+    if (titleRef.value) {
+      const words = titleRef.value.querySelectorAll('.title-word')
+      
+      gsap.fromTo(words[0], 
+        { xPercent: 0, opacity: 1, rotateZ: 0 },
+        {
+          scrollTrigger: { trigger: titleRef.value, start: "top 20%", end: "bottom top", scrub: 1 },
+          xPercent: -40,
+          opacity: 0,
+          rotateZ: -5,
+          immediateRender: false
+        }
+      )
+      
+      gsap.fromTo(words[1], 
+        { xPercent: 0, opacity: 1, rotateZ: 0 },
+        {
+          scrollTrigger: { trigger: titleRef.value, start: "top 20%", end: "bottom top", scrub: 1 },
+          xPercent: 40,
+          opacity: 0,
+          rotateZ: 5,
+          immediateRender: false
+        }
+      )
+    }
+  }, sceneWrapper.value?.parentElement || document.body)
+})
+
+onUnmounted(() => {
+  if (ctx) ctx.revert()
 })
 </script>

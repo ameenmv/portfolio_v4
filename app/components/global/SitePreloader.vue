@@ -27,8 +27,10 @@
 import { ref, onMounted } from 'vue'
 import { gsap } from 'gsap'
 import { useReducedMotion } from '~/composables/useReducedMotion'
+import { useAnimationTrigger } from '~/composables/useAnimationTrigger'
 
 const { isReducedMotion } = useReducedMotion()
+const { isPreloaderComplete } = useAnimationTrigger()
 const preloaderRef = ref<HTMLElement | null>(null)
 const textRef = ref<HTMLElement | null>(null)
 const progress = ref(0)
@@ -59,7 +61,11 @@ const animateOut = () => {
     onComplete: () => {
       isDestroyed.value = true
       document.body.style.overflow = ''
-      // Emit event so other components (like 3D scenes or TextReveals) can start
+      
+      // Update global state for synchronized animations
+      isPreloaderComplete.value = true
+      
+      // Keep emitting the old event just in case
       window.dispatchEvent(new Event('preloader-complete'))
     }
   })

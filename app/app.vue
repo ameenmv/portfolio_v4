@@ -2,17 +2,21 @@
   <SitePreloader />
   <NuxtLayout>
     <main id="main-content">
-      <NuxtPage />
+      <NuxtPage :transition="pageTransition" />
     </main>
   </NuxtLayout>
 
-  <!-- The Curtain for Page Transitions -->
+  <!-- Transition Overlay -->
   <div 
     ref="curtainRef" 
-    class="fixed inset-0 z-[100] bg-text-primary flex items-center justify-center pointer-events-none"
-    style="transform: translateY(100%);"
+    class="page-transition-overlay"
   >
-    <div ref="spinnerRef" class="w-12 h-12 border-4 border-bg-primary border-t-accent rounded-full animate-spin opacity-0"></div>
+    <img
+      ref="logoRef"
+      src="/ameeen.png"
+      alt="Ameen"
+      class="w-16 h-16 md:w-20 md:h-20"
+    />
   </div>
 </template>
 
@@ -20,60 +24,82 @@
 import { ref } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useHead, useSeoMeta, useNuxtApp, useRouter } from '#imports'
+import { useHead, useSeoMeta } from '#imports'
 import SitePreloader from '~/components/global/SitePreloader.vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
+import { useAnimationTrigger } from '~/composables/useAnimationTrigger'
 
 const { isReducedMotion } = useReducedMotion()
+const { isPageTransitioning } = useAnimationTrigger()
 const curtainRef = ref<HTMLElement | null>(null)
-const spinnerRef = ref<HTMLElement | null>(null)
+const logoRef = ref<HTMLElement | null>(null)
 
-const nuxtApp = useNuxtApp()
-const router = useRouter()
+const pageTransition = {
+  name: 'page',
+  mode: 'out-in' as const,
+  onBeforeLeave() {
+    isPageTransitioning.value = true
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+  },
+  onLeave(_el: Element, done: () => void) {
+    if (isReducedMotion.value || !curtainRef.value || !logoRef.value) {
+      done()
+      return
+    }
 
-// Bulletproof Custom Page Transition using Router Hooks
-if (import.meta.client) {
-  router.beforeResolve(async (to, from) => {
-    if (to.path === from.path) return
-    if (isReducedMotion.value) return
-    if (!curtainRef.value || !spinnerRef.value) return
+    const tl = gsap.timeline({ onComplete: done })
 
-    // Animate curtain up to cover the screen BEFORE navigating
-    await new Promise((resolve) => {
-      gsap.fromTo(curtainRef.value, 
-        { yPercent: 100 },
-        { 
-          yPercent: 0, 
-          duration: 0.7, 
-          ease: "power4.inOut",
-          onComplete: () => {
-            gsap.to(spinnerRef.value, { opacity: 1, duration: 0.2 })
-            resolve(true)
-          }
-        }
-      )
-    })
-  })
-
-  nuxtApp.hook('page:finish', () => {
-    if (isReducedMotion.value) return
-    if (!curtainRef.value || !spinnerRef.value) return
+    // Overlay slides in from top
+    tl.set(curtainRef.value, { display: 'flex', yPercent: -100 })
+    tl.set(logoRef.value, { scale: 0.5, opacity: 0, rotation: -20 })
     
-    // Hide spinner and animate curtain up to reveal new page AFTER navigating
-    gsap.to(spinnerRef.value, { opacity: 0, duration: 0.2 })
-    gsap.to(curtainRef.value, {
-      yPercent: -100,
-      duration: 0.7,
-      ease: "power4.inOut",
-      delay: 0.1,
-      onComplete: () => {
-        // Reset curtain position for next time
-        gsap.set(curtainRef.value, { yPercent: 100 })
-        // Crucial: Refresh scroll triggers after DOM changes
-        ScrollTrigger.refresh()
-      }
+    tl.to(curtainRef.value, {
+      yPercent: 0,
+      duration: 0.5,
+      ease: 'power3.inOut'
     })
-  })
+    
+    // Logo bounces in
+    tl.to(logoRef.value, {
+      scale: 1,
+      opacity: 1,
+      rotation: 0,
+      duration: 0.3,
+      ease: 'back.out(1.7)'
+    }, "-=0.15")
+  },
+  onEnter(_el: Element, done: () => void) {
+    if (isReducedMotion.value || !curtainRef.value || !logoRef.value) {
+      isPageTransitioning.value = false
+      done()
+      return
+    }
+
+    const tl = gsap.timeline({ 
+      onComplete: () => {
+        gsap.set(curtainRef.value, { display: 'none' })
+        ScrollTrigger.refresh()
+        isPageTransitioning.value = false
+        done()
+      } 
+    })
+    
+    // Short hold so the logo is visible
+    tl.to(logoRef.value, {
+      scale: 0.5,
+      opacity: 0,
+      rotation: 20,
+      duration: 0.2,
+      ease: 'power2.in'
+    })
+    
+    // Overlay slides out downward
+    tl.to(curtainRef.value, {
+      yPercent: 100,
+      duration: 0.5,
+      ease: 'power3.inOut'
+    }, "-=0.05")
+  }
 }
 
 useHead({
@@ -100,3 +126,23 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 </script>
+
+<style>
+/* Page transition overlay */
+.page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg-primary);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+/* Ensure page content doesn't flash during transition */
+.page-leave-active,
+.page-enter-active {
+  transition: none;
+}
+</style>
