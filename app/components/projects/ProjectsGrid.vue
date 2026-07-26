@@ -1,5 +1,5 @@
 <template>
-  <section id="work" class="py-32 px-6 md:px-12 bg-bg-primary relative">
+  <section ref="sectionWrapperRef" id="work" class="py-32 px-6 md:px-12 bg-bg-primary relative">
     <div class="container mx-auto">
       <SectionIntro 
         pretitle="Selected Work" 
@@ -31,6 +31,10 @@ import SectionIntro from '../ui/SectionIntro.vue'
 import ProjectCard from './ProjectCard.vue'
 import { useMagnetic } from '~/composables/useMagnetic'
 import { useProjectData } from '~/composables/useProjectData'
+import { useSectionAnimation } from '~/composables/useSectionAnimation'
+
+const sectionWrapperRef = ref<HTMLElement | null>(null)
+useSectionAnimation(sectionWrapperRef)
 
 const btnRef = ref<HTMLElement | null>(null)
 useMagnetic(btnRef, 0.4)

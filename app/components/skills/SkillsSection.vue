@@ -1,5 +1,5 @@
 <template>
-  <section id="skills" class="py-32 px-6 md:px-12 bg-bg-primary relative z-20">
+  <section ref="sectionWrapperRef" id="skills" class="py-32 px-6 md:px-12 bg-bg-primary relative z-20">
     <div class="container mx-auto">
       <SectionIntro 
         pretitle="Expertise" 
@@ -23,8 +23,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import SectionIntro from '../ui/SectionIntro.vue'
 import StackingCard from './StackingCard.vue'
+
+const sectionWrapperRef = ref<HTMLElement | null>(null)
 
 import IconFrontend from '../icons/IconFrontend.vue'
 import IconBackend from '../icons/IconBackend.vue'

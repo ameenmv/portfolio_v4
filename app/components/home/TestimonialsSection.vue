@@ -1,5 +1,5 @@
 <template>
-  <section class="py-32 bg-bg-secondary relative overflow-hidden z-20 border-y border-white/5">
+  <section ref="sectionRef" class="py-32 bg-bg-secondary relative overflow-hidden z-20 border-y border-white/5">
     <!-- Decorative background element -->
     <div class="absolute left-0 bottom-0 w-[40vw] h-[40vw] bg-accent/5 rounded-full blur-[100px] pointer-events-none transform -translate-x-1/2 translate-y-1/2"></div>
     
@@ -58,7 +58,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import SectionIntro from '../ui/SectionIntro.vue'
+import { useSectionAnimation } from '~/composables/useSectionAnimation'
+
+const sectionRef = ref<HTMLElement | null>(null)
+useSectionAnimation(sectionRef)
 
 const testimonials = [
   {

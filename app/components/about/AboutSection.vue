@@ -1,5 +1,5 @@
 <template>
-  <section id="about" class="py-32 px-6 md:px-12 bg-bg-secondary relative">
+  <section ref="sectionWrapperRef" id="about" class="py-32 px-6 md:px-12 bg-bg-secondary relative">
     <div class="container mx-auto">
       <SectionIntro 
         pretitle="The Developer" 
@@ -71,6 +71,10 @@ import SectionIntro from '../ui/SectionIntro.vue'
 import TextReveal from '../ui/TextReveal.vue'
 import AnimatedCounter from '../ui/AnimatedCounter.vue'
 import { useReducedMotion } from '~/composables/useReducedMotion'
+import { useSectionAnimation } from '~/composables/useSectionAnimation'
+
+const sectionWrapperRef = ref<HTMLElement | null>(null)
+useSectionAnimation(sectionWrapperRef)
 
 const imageRef = ref<HTMLElement | null>(null)
 const { isReducedMotion } = useReducedMotion()

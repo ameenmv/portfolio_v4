@@ -35,6 +35,7 @@ import SectionIntro from '../ui/SectionIntro.vue'
 import TimelineCard from './TimelineCard.vue'
 
 const sectionRef = ref<HTMLElement | null>(null)
+
 const scrollContainerRef = ref<HTMLElement | null>(null)
 const horizontalWrapperRef = ref<HTMLElement | null>(null)
 const { isReducedMotion } = useReducedMotion()
