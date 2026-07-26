@@ -104,7 +104,7 @@ import { ref } from 'vue'
 import { ArrowUpRight } from 'lucide-vue-next'
 
 const links = [
-  { name: 'Cases', path: '/projects' },
+  { name: 'Projects', path: '/projects' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' }
 ]

@@ -4,9 +4,9 @@
       
       <!-- Big Intro -->
       <PageIntro 
-        pretitle="Cases"
-        title="This is my work"
-        description="Brands designed by someone who was really there. Where every color, every shape, every choice has a reason."
+        pretitle="Projects"
+        title="Selected work, in depth"
+        description="A small collection of products and digital experiences. Open any project to explore the thinking, the build, and the outcome."
       />
 
       <!-- Filter Pills -->
@@ -48,11 +48,11 @@ import ProjectCard from '~/components/projects/ProjectCard.vue'
 import { useProjectData } from '~/composables/useProjectData'
 
 useHead({
-  title: 'Cases | Ameen Mohamed'
+  title: 'Projects | Ameen Mohamed'
 })
 
 useSeoMeta({
-  title: 'Cases | Ameen Mohamed',
+  title: 'Projects | Ameen Mohamed',
   description: 'A complete list of projects built by Ameen Mohamed.',
 })
 

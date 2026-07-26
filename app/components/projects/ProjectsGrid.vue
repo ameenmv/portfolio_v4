@@ -37,3 +37,7 @@ useMagnetic(btnRef, 0.4)
 
 const { projects } = useProjectData()
 </script>
+
+<style scoped>
+/* Fix for Vite HMR cache */
+</style>
