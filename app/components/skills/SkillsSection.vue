@@ -1,112 +1,79 @@
 <template>
-  <section id="skills" class="py-32 bg-bg-primary relative z-20 overflow-hidden w-full h-[120vh] min-h-[800px]" ref="sectionRef">
+  <section id="skills" class="bg-bg-primary relative overflow-hidden w-full h-screen" ref="sectionRef">
     
-    <!-- Ambient Glowing Orbs -->
-    <div class="absolute top-1/2 left-1/4 w-[40vw] h-[40vw] bg-accent/10 rounded-full blur-[100px] transform -translate-y-1/2 -translate-x-1/2 pointer-events-none z-0"></div>
-    <div class="absolute top-1/2 right-1/4 w-[40vw] h-[40vw] bg-accent-cool/10 rounded-full blur-[100px] transform -translate-y-1/2 translate-x-1/2 pointer-events-none z-0"></div>
-
-    <!-- Background Title (Behind the physics) -->
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.03]">
-      <h2 class="text-[15vw] font-display font-bold whitespace-nowrap tracking-tighter">EXPERTISE</h2>
+    <!-- Cyberpunk Background Grid -->
+    <div class="absolute inset-0 z-0 opacity-20 pointer-events-none" 
+         style="background-image: radial-gradient(circle at center, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 40px 40px;">
     </div>
 
-    <!-- Header -->
-    <div class="absolute top-32 left-0 right-0 z-10 pointer-events-none px-6 md:px-12">
-      <div class="container mx-auto max-w-[1400px]">
-        <SectionIntro 
-          pretitle="Expertise" 
-          title="Tools of the Trade." 
-          description="A fully interactive physics simulation. Grab, drag, and throw the blocks around. Click a block to explore the stack."
-        />
-      </div>
+    <!-- Huge Background Title -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.02] mix-blend-screen">
+      <h2 class="text-[20vw] font-display font-bold whitespace-nowrap tracking-tighter">STACK</h2>
     </div>
 
     <!-- Physics Container -->
-    <div ref="containerRef" class="absolute inset-0 w-full h-full z-20 overflow-hidden touch-none" @mousedown="onMouseDown" @mouseup="onMouseUp">
-      <!-- DOM representations of the physics bodies -->
+    <div ref="containerRef" class="absolute inset-0 w-full h-full z-20 touch-none overflow-hidden">
+      
+      <!-- The Cards (Physics Bodies) -->
       <div 
         v-for="(skill, index) in skills"
         :key="skill.title"
-        ref="cardRefs"
-        class="absolute top-0 left-0 w-[280px] h-[280px] md:w-[350px] md:h-[350px] rounded-[40px] flex flex-col items-center justify-center gap-4 md:gap-6 cursor-grab active:cursor-grabbing border transition-all duration-300 will-change-transform backdrop-blur-md overflow-hidden group"
-        :class="[
-          skill.colorBorder,
-          hoveredCard === index ? 'bg-white/10 scale-105 z-30' : 'bg-bg-secondary/60 shadow-2xl z-20'
-        ]"
-        @mouseenter="hoveredCard = index"
-        @mouseleave="hoveredCard = null"
+        ref="cardOuterRefs"
+        class="absolute top-0 left-0 w-[85vw] h-[55vh] md:w-[450px] md:h-[500px] cursor-grab active:cursor-grabbing will-change-transform z-20"
+        @mouseenter="onCardEnter(index)"
+        @mouseleave="onCardLeave(index)"
+        @mousedown="onCardDown(index)"
+        @mouseup="onCardUp(index)"
       >
-        <!-- Subtle inner glow -->
-        <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-        <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 mb-2 pointer-events-none transition-transform duration-300 group-hover:scale-110" :class="skill.textAccent">
-          <component :is="skill.icon" class="w-10 h-10 md:w-12 md:h-12 pointer-events-none" />
-        </div>
-        
-        <h3 class="text-3xl md:text-4xl font-display font-bold text-white text-center pointer-events-none px-4 tracking-tighter">
-          {{ skill.title }}
-        </h3>
-        
-        <!-- Tags inside the card to fill empty space -->
-        <div class="flex flex-wrap justify-center gap-2 px-6 pointer-events-none">
-          <span v-for="tag in skill.technologies.slice(0, 3)" :key="tag" class="text-[10px] md:text-xs font-mono uppercase tracking-widest px-3 py-1.5 rounded-full border border-white/10 bg-black/20 text-white/80">
-            {{ tag }}
-          </span>
-          <span v-if="skill.technologies.length > 3" class="text-[10px] md:text-xs font-mono uppercase tracking-widest px-3 py-1.5 rounded-full text-white/50 bg-black/20 border border-white/5">
-            +{{ skill.technologies.length - 3 }}
-          </span>
-        </div>
-
-        <!-- Subtle hint -->
-        <span class="absolute bottom-6 text-white/40 text-[10px] font-mono uppercase tracking-widest pointer-events-none flex items-center gap-2 group-hover:text-accent transition-colors duration-300">
-          Click to open 
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-        </span>
-      </div>
-    </div>
-
-    <!-- Detailed Modal (When clicked) -->
-    <Transition name="fade">
-      <div v-if="activeSkill !== null" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl touch-auto">
+        <!-- The Inner Card -->
         <div 
-          class="relative w-full max-w-4xl bg-bg-secondary border rounded-[40px] p-8 md:p-16 shadow-2xl overflow-y-auto max-h-[90vh]"
-          :class="skills[activeSkill].colorBorder"
-          v-click-outside="closeModal"
+          class="inner-tilt-card w-full h-full rounded-[40px] p-6 md:p-8 flex flex-col relative overflow-hidden transition-colors duration-500 border border-white/10 shadow-2xl backdrop-blur-xl"
+          :class="[
+            skill.colorBorder,
+            activeCard === index ? 'bg-bg-elevated border-accent shadow-[0_0_80px_rgba(var(--color-accent),0.2)]' : 'bg-bg-secondary/80'
+          ]"
         >
-          <!-- Close Button -->
-          <button @click="closeModal" class="absolute top-6 right-6 md:top-8 md:right-8 w-12 h-12 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          </button>
-
-          <div class="flex items-center gap-6 mb-8">
-            <div class="w-20 h-20 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10" :class="skills[activeSkill].textAccent">
-              <component :is="skills[activeSkill].icon" class="w-12 h-12" />
-            </div>
-            <h3 class="text-4xl md:text-6xl font-display font-bold tracking-tighter text-white">
-              {{ skills[activeSkill].title }}
-            </h3>
+          <!-- Subtle Glow on Hover -->
+          <div class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500"
+               :class="activeCard === index ? 'opacity-100' : ''"
+               style="background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%)">
           </div>
 
-          <p class="text-xl md:text-2xl text-text-secondary leading-relaxed mb-12 max-w-3xl">
-            {{ skills[activeSkill].description }}
-          </p>
-          
-          <div class="mb-6">
-            <h4 class="text-sm font-mono uppercase tracking-widest text-white/50 mb-4">Core Technologies</h4>
-            <div class="flex flex-wrap gap-3">
-              <span 
-                v-for="tech in skills[activeSkill].technologies" 
-                :key="tech"
-                class="px-5 py-2.5 rounded-full border border-white/10 bg-white/5 text-white text-sm md:text-base font-bold tracking-widest shadow-sm"
-              >
-                {{ tech }}
-              </span>
+          <!-- Card Content -->
+          <div class="relative z-10 h-full flex flex-col pointer-events-none">
+            <!-- Header -->
+            <div class="flex items-center gap-4 md:gap-6 mb-4 md:mb-6">
+              <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 shadow-inner shrink-0" :class="skill.textAccent">
+                <component :is="skill.icon" class="w-8 h-8 md:w-10 md:h-10" />
+              </div>
+              <h3 class="text-2xl md:text-3xl font-display font-bold tracking-tighter text-white uppercase">
+                {{ skill.title }}
+              </h3>
+            </div>
+
+            <!-- Description -->
+            <p class="text-white/80 text-base md:text-lg leading-relaxed mb-auto">
+              {{ skill.description }}
+            </p>
+
+            <!-- Technologies -->
+            <div class="mt-6 pt-6 border-t border-white/10">
+              <h4 class="text-[10px] md:text-xs font-mono uppercase tracking-widest text-white/40 mb-3">Core Technologies</h4>
+              <div class="flex flex-wrap gap-2">
+                <span 
+                  v-for="tech in skill.technologies" 
+                  :key="tech"
+                  class="px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/10 bg-black/40 text-white/90 text-[10px] md:text-xs font-bold tracking-widest uppercase shadow-sm"
+                >
+                  {{ tech }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </Transition>
-
+      
+    </div>
   </section>
 </template>
 
@@ -114,201 +81,174 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import Matter from 'matter-js'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '~/composables/useReducedMotion'
 
-import SectionIntro from '../ui/SectionIntro.vue'
 import IconFrontend from '../icons/IconFrontend.vue'
 import IconBackend from '../icons/IconBackend.vue'
 import IconDesign from '../icons/IconDesign.vue'
 import IconArchitecture from '../icons/IconArchitecture.vue'
 
-// Custom directive to handle clicking outside the modal
-const vClickOutside = {
-  mounted(el: any, binding: any) {
-    el.clickOutsideEvent = (event: Event) => {
-      if (!(el == event.target || el.contains(event.target))) {
-        binding.value(event)
-      }
-    }
-    setTimeout(() => {
-      document.body.addEventListener('click', el.clickOutsideEvent)
-    }, 50)
-  },
-  unmounted(el: any) {
-    document.body.removeEventListener('click', el.clickOutsideEvent)
-  }
-}
-
 const skills = [
   {
     title: 'Frontend',
-    description: 'Specializing in the Vue ecosystem to build scalable, reactive, and highly performant applications. Deep understanding of modern state management and reactive patterns.',
+    description: 'Specializing in the Vue ecosystem to build scalable, reactive, and highly performant applications. Mastering modern state management and WebGL.',
     technologies: ['Vue.js', 'Nuxt.js', 'TypeScript', 'Pinia', 'GSAP', 'WebGL', 'Tailwind'],
-    colorBorder: 'border-accent/40',
+    colorBorder: 'hover:border-accent/50',
     textAccent: 'text-accent',
-    bgHoverClass: 'bg-accent/20',
     icon: IconFrontend
   },
   {
     title: 'Backend',
     description: 'Bridging the gap with full-stack capabilities. Building robust APIs, real-time communication servers, and managing complex databases.',
     technologies: ['Node.js', 'NestJS', 'MongoDB', 'Laravel', 'WebSockets', 'PostgreSQL'],
-    colorBorder: 'border-accent-warm/40',
+    colorBorder: 'hover:border-accent-warm/50',
     textAccent: 'text-accent-warm',
-    bgHoverClass: 'bg-accent-warm/20',
     icon: IconBackend
   },
   {
     title: 'Design',
     description: 'Translating complex designs into pixel-perfect, accessible, and responsive interfaces. Strong focus on design systems and micro-interactions.',
-    technologies: ['Figma', 'Prototyping', 'Design Systems', 'Framer Motion', 'Spline'],
-    colorBorder: 'border-accent-cool/40',
+    technologies: ['Figma', 'Design Systems', 'Framer Motion', 'Spline'],
+    colorBorder: 'hover:border-accent-cool/50',
     textAccent: 'text-accent-cool',
-    bgHoverClass: 'bg-accent-cool/20',
     icon: IconDesign
   },
   {
     title: 'Architecture',
     description: 'Setting up projects for long-term success. Implementing CI/CD pipelines, internationalization, and maintaining clean code standards.',
-    technologies: ['Docker', 'Git', 'CI/CD', 'Jest', 'Clean Architecture', 'Turborepo'],
-    colorBorder: 'border-[#b0aea5]/40', 
+    technologies: ['Docker', 'Git', 'CI/CD', 'Jest', 'Clean Code', 'Turborepo'],
+    colorBorder: 'hover:border-[#b0aea5]/50', 
     textAccent: 'text-[#b0aea5]',
-    bgHoverClass: 'bg-[#b0aea5]/20',
     icon: IconArchitecture
   }
 ]
 
 const sectionRef = ref<HTMLElement | null>(null)
 const containerRef = ref<HTMLElement | null>(null)
-const cardRefs = ref<HTMLElement[]>([])
+const cardOuterRefs = ref<HTMLElement[]>([])
 
-const hoveredCard = ref<number | null>(null)
-const activeSkill = ref<number | null>(null)
+const activeCard = ref<number | null>(null)
 
 let engine: Matter.Engine
 let runner: Matter.Runner
 let mouseConstraint: Matter.MouseConstraint
 let resizeObserver: ResizeObserver
-
-let dragStartX = 0
-let dragStartY = 0
-let isDragging = false
+let cardBodies: Matter.Body[] = []
 
 const { isReducedMotion } = useReducedMotion()
 
 onMounted(async () => {
   if (isReducedMotion.value || !containerRef.value) return
-  
   await nextTick()
 
-  const Engine = Matter.Engine
-  const Render = Matter.Render
-  const Runner = Matter.Runner
-  const Bodies = Matter.Bodies
-  const Composite = Matter.Composite
-  const Mouse = Matter.Mouse
-  const MouseConstraint = Matter.MouseConstraint
+  const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Constraint } = Matter
 
   engine = Engine.create({
-    gravity: { x: 0, y: 0 } // Zero gravity (floating space)
+    gravity: { x: 0, y: 0 } // Zero gravity
   })
 
   let width = containerRef.value.clientWidth
   let height = containerRef.value.clientHeight
 
-  const wallOptions = { 
-    isStatic: true, 
-    render: { visible: false },
-    restitution: 0.8 // Bouncy walls
-  }
-  
-  const thickness = 100
+  // Extremely thick invisible boundaries so cards NEVER fly off screen
+  const wallOptions = { isStatic: true, render: { visible: false }, restitution: 0.5, friction: 0.1 }
+  const thickness = 2000
   const walls = [
     Bodies.rectangle(width / 2, -thickness / 2, width * 2, thickness, wallOptions),
     Bodies.rectangle(width / 2, height + thickness / 2, width * 2, thickness, wallOptions),
     Bodies.rectangle(-thickness / 2, height / 2, thickness, height * 2, wallOptions),
     Bodies.rectangle(width + thickness / 2, height / 2, thickness, height * 2, wallOptions)
   ]
-
   Composite.add(engine.world, walls)
 
-  const cardBodies = cardRefs.value.map((el, index) => {
+  // Create Physics Bodies
+  cardBodies = cardOuterRefs.value.map((el, index) => {
     const isMobile = window.innerWidth < 768
-    const cardSize = isMobile ? 280 : 350
+    const cardW = isMobile ? width * 0.85 : 450
+    const cardH = isMobile ? height * 0.55 : 500
     
-    // Spread them out in a loose grid so they don't explode initially
-    const offsetX = index % 2 === 0 ? -150 : 150
-    const offsetY = index < 2 ? -150 : 150
+    // SAFE SPAWNING: Guarantee they NEVER overlap on initialization
+    // By offsetting them exactly by half their width/height plus a margin
+    const offsetX = index % 2 === 0 ? -(cardW / 2 + 10) : (cardW / 2 + 10)
+    const offsetY = index < 2 ? -(cardH / 2 + 10) : (cardH / 2 + 10)
     const startX = width / 2 + offsetX
     const startY = height / 2 + offsetY
     
-    const body = Bodies.rectangle(startX, startY, cardSize, cardSize, {
-      restitution: 0.9, 
-      frictionAir: 0.02, 
-      friction: 0.05,
-      density: 0.002,
+    const body = Bodies.rectangle(startX, startY, cardW, cardH, {
+      restitution: 0.4, 
+      frictionAir: 0.08, 
+      friction: 0.2,
+      density: 0.02, 
       chamfer: { radius: 40 },
-      render: { visible: false }
     })
     
+    // Elastic spring (Constraint) anchoring them to their grid position
+    const spring = Constraint.create({
+      pointA: { x: startX, y: startY },
+      bodyB: body,
+      pointB: { x: 0, y: 0 },
+      stiffness: 0.001, // Very soft spring
+      damping: 0.1 // High damping prevents infinite wobbling
+    })
+    
+    Composite.add(engine.world, spring)
+
+    // Initial gentle push
     Matter.Body.setVelocity(body, { 
-      x: (Math.random() - 0.5) * 8, 
-      y: (Math.random() - 0.5) * 8 
+      x: (Math.random() - 0.5) * 5, 
+      y: (Math.random() - 0.5) * 5 
     })
-    Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.03)
-    
-    ;(body as any).cardIndex = index
+    Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.02)
     
     return body
   })
 
   Composite.add(engine.world, cardBodies)
 
+  // Mouse interaction
   const mouse = Mouse.create(containerRef.value)
-  
   mouse.element.removeEventListener("mousewheel", (mouse as any).mousewheel)
   mouse.element.removeEventListener("DOMMouseScroll", (mouse as any).mousewheel)
 
   mouseConstraint = MouseConstraint.create(engine, {
     mouse: mouse,
     constraint: {
-      stiffness: 0.2,
+      stiffness: 0.1, 
       render: { visible: false }
     }
   })
 
   Composite.add(engine.world, mouseConstraint)
 
-  ScrollTrigger.addEventListener("scrollStart", () => {
-    if (mouseConstraint) {
-      mouseConstraint.collisionFilter.mask = 0;
-    }
-  })
-  
-  ScrollTrigger.addEventListener("scrollEnd", () => {
-    if (mouseConstraint) {
-      mouseConstraint.collisionFilter.mask = 0xFFFFFFFF;
-      Mouse.setOffset(mouse, { x: 0, y: -window.scrollY });
-    }
-  })
-
+  // Sync DOM elements with Physics Bodies
   Matter.Events.on(engine, 'afterUpdate', () => {
-    // Attract bodies slowly to the center so they don't just hug the walls
     cardBodies.forEach((body, i) => {
-      const centerX = width / 2;
-      const centerY = height / 2;
-      const dx = centerX - body.position.x;
-      const dy = centerY - body.position.y;
       
-      // Apply a very gentle force towards the center
-      Matter.Body.applyForce(body, body.position, {
-        x: dx * 0.000002,
-        y: dy * 0.000002
-      });
+      // Keep it safely upright (Avoids NaN bug from applying Torque with Infinite inertia)
+      if (!isNaN(body.angle) && !mouseConstraint.body) {
+        // Gently pull angle to 0 like it has a heavy bottom
+        Matter.Body.setAngle(body, body.angle * 0.9);
+        Matter.Body.setAngularVelocity(body, body.angularVelocity * 0.85);
+      }
 
-      const el = cardRefs.value[i]
-      if (el) {
+      // Safe Velocity Clamping (Prevents NaN explosion if physics glitch)
+      const maxVelocity = 40;
+      const speed = Math.sqrt(body.velocity.x ** 2 + body.velocity.y ** 2);
+      
+      if (speed > maxVelocity && speed !== Infinity && !isNaN(speed)) {
+        const ratio = maxVelocity / speed;
+        Matter.Body.setVelocity(body, {
+          x: body.velocity.x * ratio,
+          y: body.velocity.y * ratio
+        });
+      } else if (speed === Infinity || isNaN(speed)) {
+        // Rescue logic if it exploded
+        Matter.Body.setVelocity(body, { x: 0, y: 0 });
+      }
+
+      const el = cardOuterRefs.value[i]
+      // Only apply CSS if we have valid numbers
+      if (el && !isNaN(body.position.x) && !isNaN(body.position.y) && !isNaN(body.angle)) {
         const x = body.position.x - el.offsetWidth / 2
         const y = body.position.y - el.offsetHeight / 2
         el.style.transform = `translate(${x}px, ${y}px) rotate(${body.angle}rad)`
@@ -336,55 +276,31 @@ onUnmounted(() => {
   if (resizeObserver) resizeObserver.disconnect()
 })
 
-const onMouseDown = (e: MouseEvent) => {
-  dragStartX = e.clientX
-  dragStartY = e.clientY
-  isDragging = false
+const onCardEnter = (index: number) => {
+  activeCard.value = index
+  const innerCard = cardOuterRefs.value[index].querySelector('.inner-tilt-card')
+  gsap.to(innerCard, { scale: 1.03, duration: 0.4, ease: "power2.out" })
 }
 
-const onMouseUp = (e: MouseEvent) => {
-  const dist = Math.hypot(e.clientX - dragStartX, e.clientY - dragStartY)
-  if (dist > 10) {
-    isDragging = true
-    return
-  }
-  
-  const target = e.target as HTMLElement
-  const cardElement = target.closest('.cursor-grab') as HTMLElement | null
-  
-  if (cardElement) {
-    const index = cardRefs.value.indexOf(cardElement)
-    if (index !== -1) {
-      activeSkill.value = index
-    }
-  }
+const onCardLeave = (index: number) => {
+  activeCard.value = null
+  const innerCard = cardOuterRefs.value[index].querySelector('.inner-tilt-card')
+  gsap.to(innerCard, { scale: 1, duration: 0.7, ease: "elastic.out(1, 0.5)" })
 }
 
-const closeModal = () => {
-  activeSkill.value = null
+const onCardDown = (index: number) => {
+  const innerCard = cardOuterRefs.value[index].querySelector('.inner-tilt-card')
+  gsap.to(innerCard, { scale: 0.98, duration: 0.2, ease: "power2.out" })
+}
+
+const onCardUp = (index: number) => {
+  const innerCard = cardOuterRefs.value[index].querySelector('.inner-tilt-card')
+  gsap.to(innerCard, { scale: 1.03, duration: 0.4, ease: "back.out(1.5)" })
 }
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.4s ease, backdrop-filter 0.4s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  backdrop-filter: blur(0px);
-}
-
-.fade-enter-active .bg-bg-secondary,
-.fade-leave-active .bg-bg-secondary {
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
-}
-
-.fade-enter-from .bg-bg-secondary,
-.fade-leave-to .bg-bg-secondary {
-  transform: scale(0.9) translateY(20px);
-  opacity: 0;
+section {
+  overscroll-behavior: none;
 }
 </style>
