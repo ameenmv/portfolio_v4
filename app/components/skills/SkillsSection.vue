@@ -1,5 +1,5 @@
 <template>
-  <section id="skills" class="bg-bg-primary relative overflow-hidden w-full h-[100vh] min-h-[800px] flex flex-col" ref="sectionRef">
+  <section id="skills" class="bg-bg-primary relative w-full h-[100vh] min-h-[700px] flex flex-col" ref="sectionRef">
     
     <!-- Cyberpunk Background Grid -->
     <div class="absolute inset-0 z-0 opacity-20 pointer-events-none" 
@@ -7,12 +7,12 @@
     </div>
 
     <!-- Huge Background Title -->
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.02] mix-blend-screen">
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.02] mix-blend-screen overflow-hidden">
       <h2 class="text-[20vw] font-display font-bold whitespace-nowrap tracking-tighter">STACK</h2>
     </div>
 
     <!-- Header (Stays at top, doesn't overlap cards) -->
-    <div class="pt-24 md:pt-32 pb-8 px-6 md:px-12 z-30 pointer-events-none transition-opacity duration-1000 shrink-0"
+    <div class="pt-24 md:pt-32 pb-4 px-6 md:px-12 z-30 pointer-events-none transition-opacity duration-1000 shrink-0"
          :class="hasShattered ? 'opacity-100' : 'opacity-0'">
       <div class="container mx-auto max-w-[1400px]">
         <SectionIntro 
@@ -31,16 +31,16 @@
         v-for="(skill, index) in skills"
         :key="skill.title"
         ref="cardOuterRefs"
-        class="absolute top-0 left-0 w-[85vw] h-[45vh] md:w-[400px] md:h-[450px] will-change-transform z-20"
+        class="absolute top-0 left-0 w-[85vw] h-[220px] md:w-[420px] md:h-[240px] will-change-transform z-20"
         :class="hasShattered ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'"
         @mouseenter="onCardEnter(index)"
         @mouseleave="onCardLeave(index)"
         @mousedown="onCardDown(index)"
         @mouseup="onCardUp(index)"
       >
-        <!-- The Inner Card -->
+        <!-- The Inner Card - Horizontal Layout -->
         <div 
-          class="inner-tilt-card w-full h-full rounded-[40px] p-6 md:p-8 flex flex-col relative overflow-hidden transition-all duration-500 border border-white/10 shadow-2xl backdrop-blur-xl"
+          class="inner-tilt-card w-full h-full rounded-[30px] p-5 md:p-6 flex flex-col relative overflow-hidden transition-all duration-500 border border-white/10 shadow-2xl backdrop-blur-xl"
           :class="[
             skill.colorBorder,
             activeCard === index && hasShattered ? 'bg-bg-elevated border-accent shadow-[0_0_80px_rgba(var(--color-accent),0.2)]' : 'bg-bg-secondary/80',
@@ -56,29 +56,31 @@
           <!-- Card Content -->
           <div class="relative z-10 h-full flex flex-col pointer-events-none transition-opacity duration-700" :class="!hasShattered ? 'opacity-50' : 'opacity-100'">
             
-            <div class="flex items-center gap-4 md:gap-6 mb-4 md:mb-6">
-              <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 shadow-inner shrink-0" :class="skill.textAccent">
-                <component :is="skill.icon" class="w-6 h-6 md:w-8 md:h-8" />
+            <div class="flex items-center gap-4 mb-3">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 shadow-inner shrink-0" :class="skill.textAccent">
+                <component :is="skill.icon" class="w-6 h-6" />
               </div>
-              <h3 class="text-2xl md:text-3xl font-display font-bold tracking-tighter text-white uppercase">
+              <h3 class="text-xl md:text-2xl font-display font-bold tracking-tighter text-white uppercase">
                 {{ skill.title }}
               </h3>
             </div>
 
-            <p class="text-white/80 text-sm md:text-base leading-relaxed mb-auto line-clamp-4">
+            <p class="text-white/80 text-xs md:text-sm leading-relaxed mb-auto line-clamp-3">
               {{ skill.description }}
             </p>
 
-            <div class="mt-4 pt-4 md:mt-6 md:pt-6 border-t border-white/10">
-              <h4 class="text-[10px] md:text-xs font-mono uppercase tracking-widest text-white/40 mb-3">Core Technologies</h4>
-              <div class="flex flex-wrap gap-2">
+            <div class="mt-4 pt-4 border-t border-white/10">
+              <div class="flex flex-wrap gap-1.5 md:gap-2">
                 <span 
-                  v-for="tech in skill.technologies" 
+                  v-for="tech in skill.technologies.slice(0, 5)" 
                   :key="tech"
-                  class="px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-white/10 bg-black/40 text-white/90 text-[9px] md:text-xs font-bold tracking-widest uppercase shadow-sm transition-colors duration-500"
+                  class="px-2 py-1 rounded-full border border-white/10 bg-black/40 text-white/90 text-[9px] md:text-[10px] font-bold tracking-widest uppercase shadow-sm transition-colors duration-500"
                   :class="!hasShattered ? 'border-transparent text-white/50' : ''"
                 >
                   {{ tech }}
+                </span>
+                <span v-if="skill.technologies.length > 5" class="px-2 py-1 text-[9px] text-white/40 font-bold">
+                  +{{ skill.technologies.length - 5 }}
                 </span>
               </div>
             </div>
@@ -162,7 +164,7 @@ onMounted(async () => {
   const { Engine, Runner, Bodies, Composite, Mouse, MouseConstraint, Constraint } = Matter
 
   engine = Engine.create({
-    gravity: { x: 0, y: 0 } // Zero gravity
+    gravity: { x: 0, y: 0 } 
   })
 
   let width = containerRef.value.clientWidth
@@ -170,7 +172,7 @@ onMounted(async () => {
 
   // Extremely thick invisible boundaries so cards NEVER fly off screen
   const wallOptions = { isStatic: true, render: { visible: false }, restitution: 0.5, friction: 0.1 }
-  const thickness = 3000 // Huge thickness to prevent tunneling
+  const thickness = 3000
   const walls = [
     Bodies.rectangle(width / 2, -thickness / 2, width * 2, thickness, wallOptions),
     Bodies.rectangle(width / 2, height + thickness / 2, width * 2, thickness, wallOptions),
@@ -181,28 +183,30 @@ onMounted(async () => {
 
   // Create Physics Bodies
   cardOuterRefs.value.forEach((el, index) => {
-    // Dynamic sizes based on viewport
+    // Dynamic sizes based on viewport (HORIZONTAL NOW)
     const isMobile = window.innerWidth < 768
-    const cardW = isMobile ? width * 0.85 : 400
-    const cardH = isMobile ? height * 0.5 : 450
+    const cardW = isMobile ? width * 0.85 : 420
+    const cardH = isMobile ? 220 : 240
+    
+    const gapX = isMobile ? 10 : 30
+    const gapY = isMobile ? 10 : 30
     
     // SAFE SPAWNING: Calculate ideal grid positions
-    const gap = 20
-    let idealX = width / 2 + (index % 2 === 0 ? -(cardW / 2 + gap/2) : (cardW / 2 + gap/2))
-    let idealY = height / 2 + (index < 2 ? -(cardH / 2 + gap/2) : (cardH / 2 + gap/2))
+    let idealX = width / 2 + (index % 2 === 0 ? -(cardW / 2 + gapX/2) : (cardW / 2 + gapX/2))
+    let idealY = height / 2 + (index < 2 ? -(cardH / 2 + gapY/2) : (cardH / 2 + gapY/2))
     
-    // CLAMP to screen bounds to prevent spawning inside walls
-    const marginX = cardW / 2 + 10;
-    const marginY = cardH / 2 + 10;
+    // CLAMP to screen bounds to prevent spawning inside walls or overlapping due to tiny screens
+    const marginX = cardW / 2 + 5;
+    const marginY = cardH / 2 + 5;
     idealX = Math.max(marginX, Math.min(width - marginX, idealX));
     idealY = Math.max(marginY, Math.min(height - marginY, idealY));
     
     const body = Bodies.rectangle(idealX, idealY, cardW, cardH, {
-      restitution: 0.5, // Bouncy
+      restitution: 0.6, // Bouncy
       frictionAir: 0.08, 
       friction: 0.2,
-      density: 0.05, // Heavy so they feel solid
-      chamfer: { radius: 40 },
+      density: 0.05,
+      chamfer: { radius: 30 },
     })
     
     // The Rigid Grid Locks (Starts out very stiff to hold them in grid)
@@ -210,8 +214,8 @@ onMounted(async () => {
       pointA: { x: idealX, y: idealY },
       bodyB: body,
       pointB: { x: 0, y: 0 },
-      stiffness: 0.1, // Stiff enough to hold them
-      damping: 0.8 // High damping to prevent shaking
+      stiffness: 0.2, // Extremely Stiff enough to hold them perfectly
+      damping: 0.9 
     })
     
     Composite.add(engine.world, [body, spring])
@@ -242,16 +246,15 @@ onMounted(async () => {
       if (isNaN(body.position.x) || isNaN(body.position.y) || isNaN(body.angle)) {
         const el = cardOuterRefs.value[i]
         if (el) {
-          // Rescue layout: Just space them out manually so they don't stack at 0,0
           el.style.transform = `translate(${100 + i * 50}px, ${100 + i * 50}px)`
         }
-        return; // Skip physics math for this corrupted body
+        return; 
       }
 
       // Physics logic
       if (!mouseConstraint.body && hasShattered.value) {
         // Gently pull angle to 0 like it has a heavy bottom
-        Matter.Body.setAngle(body, body.angle * 0.9);
+        Matter.Body.setAngle(body, body.angle * 0.92);
         Matter.Body.setAngularVelocity(body, body.angularVelocity * 0.85);
       }
 
@@ -290,11 +293,11 @@ onMounted(async () => {
       cardBodies.forEach((body, i) => {
         // 1. Relax the springs completely so they float
         const spring = cardSprings[i]
-        spring.stiffness = 0.0005 // Very loose rubber band
-        spring.damping = 0.1
+        spring.stiffness = 0.0002 // Extremely loose rubber band
+        spring.damping = 0.05
         
         // 2. Massive explosive force outwards from the center!
-        const forceX = body.position.x > width / 2 ? 10 : -10;
+        const forceX = body.position.x > width / 2 ? 15 : -15;
         const forceY = body.position.y > height / 2 ? 10 : -10;
         
         Matter.Body.setVelocity(body, { 
