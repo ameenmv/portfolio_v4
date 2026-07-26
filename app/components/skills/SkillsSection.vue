@@ -1,5 +1,5 @@
 <template>
-  <section id="skills" class="bg-bg-primary relative overflow-hidden w-full h-screen" ref="sectionRef">
+  <section id="skills" class="bg-bg-primary relative overflow-hidden w-full h-[100vh] min-h-[800px] flex flex-col" ref="sectionRef">
     
     <!-- Cyberpunk Background Grid -->
     <div class="absolute inset-0 z-0 opacity-20 pointer-events-none" 
@@ -11,15 +11,28 @@
       <h2 class="text-[20vw] font-display font-bold whitespace-nowrap tracking-tighter">STACK</h2>
     </div>
 
-    <!-- Physics Container -->
-    <div ref="containerRef" class="absolute inset-0 w-full h-full z-20 touch-none overflow-hidden">
+    <!-- Header (Stays at top, doesn't overlap cards) -->
+    <div class="pt-24 md:pt-32 pb-8 px-6 md:px-12 z-30 pointer-events-none transition-opacity duration-1000 shrink-0"
+         :class="hasShattered ? 'opacity-100' : 'opacity-0'">
+      <div class="container mx-auto max-w-[1400px]">
+        <SectionIntro 
+          pretitle="Expertise" 
+          title="Tools of the Trade." 
+          description="A fully interactive physics simulation. Grab, drag, and throw the blocks around."
+        />
+      </div>
+    </div>
+
+    <!-- Physics Container (Takes remaining height) -->
+    <div ref="containerRef" class="relative flex-1 w-full touch-none overflow-hidden z-20">
       
-      <!-- The Cards (Physics Bodies) -->
+      <!-- The Cards (DOM mapped to Physics) -->
       <div 
         v-for="(skill, index) in skills"
         :key="skill.title"
         ref="cardOuterRefs"
-        class="absolute top-0 left-0 w-[85vw] h-[55vh] md:w-[450px] md:h-[500px] cursor-grab active:cursor-grabbing will-change-transform z-20"
+        class="absolute top-0 left-0 w-[85vw] h-[45vh] md:w-[400px] md:h-[450px] will-change-transform z-20"
+        :class="hasShattered ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'"
         @mouseenter="onCardEnter(index)"
         @mouseleave="onCardLeave(index)"
         @mousedown="onCardDown(index)"
@@ -27,48 +40,49 @@
       >
         <!-- The Inner Card -->
         <div 
-          class="inner-tilt-card w-full h-full rounded-[40px] p-6 md:p-8 flex flex-col relative overflow-hidden transition-colors duration-500 border border-white/10 shadow-2xl backdrop-blur-xl"
+          class="inner-tilt-card w-full h-full rounded-[40px] p-6 md:p-8 flex flex-col relative overflow-hidden transition-all duration-500 border border-white/10 shadow-2xl backdrop-blur-xl"
           :class="[
             skill.colorBorder,
-            activeCard === index ? 'bg-bg-elevated border-accent shadow-[0_0_80px_rgba(var(--color-accent),0.2)]' : 'bg-bg-secondary/80'
+            activeCard === index && hasShattered ? 'bg-bg-elevated border-accent shadow-[0_0_80px_rgba(var(--color-accent),0.2)]' : 'bg-bg-secondary/80',
+            !hasShattered ? 'grayscale brightness-75 scale-95' : 'scale-100'
           ]"
         >
           <!-- Subtle Glow on Hover -->
           <div class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500"
-               :class="activeCard === index ? 'opacity-100' : ''"
+               :class="activeCard === index && hasShattered ? 'opacity-100' : ''"
                style="background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%)">
           </div>
 
           <!-- Card Content -->
-          <div class="relative z-10 h-full flex flex-col pointer-events-none">
-            <!-- Header -->
+          <div class="relative z-10 h-full flex flex-col pointer-events-none transition-opacity duration-700" :class="!hasShattered ? 'opacity-50' : 'opacity-100'">
+            
             <div class="flex items-center gap-4 md:gap-6 mb-4 md:mb-6">
-              <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 shadow-inner shrink-0" :class="skill.textAccent">
-                <component :is="skill.icon" class="w-8 h-8 md:w-10 md:h-10" />
+              <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 shadow-inner shrink-0" :class="skill.textAccent">
+                <component :is="skill.icon" class="w-6 h-6 md:w-8 md:h-8" />
               </div>
               <h3 class="text-2xl md:text-3xl font-display font-bold tracking-tighter text-white uppercase">
                 {{ skill.title }}
               </h3>
             </div>
 
-            <!-- Description -->
-            <p class="text-white/80 text-base md:text-lg leading-relaxed mb-auto">
+            <p class="text-white/80 text-sm md:text-base leading-relaxed mb-auto line-clamp-4">
               {{ skill.description }}
             </p>
 
-            <!-- Technologies -->
-            <div class="mt-6 pt-6 border-t border-white/10">
+            <div class="mt-4 pt-4 md:mt-6 md:pt-6 border-t border-white/10">
               <h4 class="text-[10px] md:text-xs font-mono uppercase tracking-widest text-white/40 mb-3">Core Technologies</h4>
               <div class="flex flex-wrap gap-2">
                 <span 
                   v-for="tech in skill.technologies" 
                   :key="tech"
-                  class="px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/10 bg-black/40 text-white/90 text-[10px] md:text-xs font-bold tracking-widest uppercase shadow-sm"
+                  class="px-2 py-1 md:px-3 md:py-1.5 rounded-full border border-white/10 bg-black/40 text-white/90 text-[9px] md:text-xs font-bold tracking-widest uppercase shadow-sm transition-colors duration-500"
+                  :class="!hasShattered ? 'border-transparent text-white/50' : ''"
                 >
                   {{ tech }}
                 </span>
               </div>
             </div>
+            
           </div>
         </div>
       </div>
@@ -81,8 +95,10 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import Matter from 'matter-js'
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '~/composables/useReducedMotion'
 
+import SectionIntro from '../ui/SectionIntro.vue'
 import IconFrontend from '../icons/IconFrontend.vue'
 import IconBackend from '../icons/IconBackend.vue'
 import IconDesign from '../icons/IconDesign.vue'
@@ -128,12 +144,14 @@ const containerRef = ref<HTMLElement | null>(null)
 const cardOuterRefs = ref<HTMLElement[]>([])
 
 const activeCard = ref<number | null>(null)
+const hasShattered = ref(false)
 
 let engine: Matter.Engine
 let runner: Matter.Runner
 let mouseConstraint: Matter.MouseConstraint
 let resizeObserver: ResizeObserver
 let cardBodies: Matter.Body[] = []
+let cardSprings: Matter.Constraint[] = []
 
 const { isReducedMotion } = useReducedMotion()
 
@@ -141,7 +159,7 @@ onMounted(async () => {
   if (isReducedMotion.value || !containerRef.value) return
   await nextTick()
 
-  const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Constraint } = Matter
+  const { Engine, Runner, Bodies, Composite, Mouse, MouseConstraint, Constraint } = Matter
 
   engine = Engine.create({
     gravity: { x: 0, y: 0 } // Zero gravity
@@ -152,7 +170,7 @@ onMounted(async () => {
 
   // Extremely thick invisible boundaries so cards NEVER fly off screen
   const wallOptions = { isStatic: true, render: { visible: false }, restitution: 0.5, friction: 0.1 }
-  const thickness = 2000
+  const thickness = 3000 // Huge thickness to prevent tunneling
   const walls = [
     Bodies.rectangle(width / 2, -thickness / 2, width * 2, thickness, wallOptions),
     Bodies.rectangle(width / 2, height + thickness / 2, width * 2, thickness, wallOptions),
@@ -162,48 +180,44 @@ onMounted(async () => {
   Composite.add(engine.world, walls)
 
   // Create Physics Bodies
-  cardBodies = cardOuterRefs.value.map((el, index) => {
+  cardOuterRefs.value.forEach((el, index) => {
+    // Dynamic sizes based on viewport
     const isMobile = window.innerWidth < 768
-    const cardW = isMobile ? width * 0.85 : 450
-    const cardH = isMobile ? height * 0.55 : 500
+    const cardW = isMobile ? width * 0.85 : 400
+    const cardH = isMobile ? height * 0.5 : 450
     
-    // SAFE SPAWNING: Guarantee they NEVER overlap on initialization
-    // By offsetting them exactly by half their width/height plus a margin
-    const offsetX = index % 2 === 0 ? -(cardW / 2 + 10) : (cardW / 2 + 10)
-    const offsetY = index < 2 ? -(cardH / 2 + 10) : (cardH / 2 + 10)
-    const startX = width / 2 + offsetX
-    const startY = height / 2 + offsetY
+    // SAFE SPAWNING: Calculate ideal grid positions
+    const gap = 20
+    let idealX = width / 2 + (index % 2 === 0 ? -(cardW / 2 + gap/2) : (cardW / 2 + gap/2))
+    let idealY = height / 2 + (index < 2 ? -(cardH / 2 + gap/2) : (cardH / 2 + gap/2))
     
-    const body = Bodies.rectangle(startX, startY, cardW, cardH, {
-      restitution: 0.4, 
+    // CLAMP to screen bounds to prevent spawning inside walls
+    const marginX = cardW / 2 + 10;
+    const marginY = cardH / 2 + 10;
+    idealX = Math.max(marginX, Math.min(width - marginX, idealX));
+    idealY = Math.max(marginY, Math.min(height - marginY, idealY));
+    
+    const body = Bodies.rectangle(idealX, idealY, cardW, cardH, {
+      restitution: 0.5, // Bouncy
       frictionAir: 0.08, 
       friction: 0.2,
-      density: 0.02, 
+      density: 0.05, // Heavy so they feel solid
       chamfer: { radius: 40 },
     })
     
-    // Elastic spring (Constraint) anchoring them to their grid position
+    // The Rigid Grid Locks (Starts out very stiff to hold them in grid)
     const spring = Constraint.create({
-      pointA: { x: startX, y: startY },
+      pointA: { x: idealX, y: idealY },
       bodyB: body,
       pointB: { x: 0, y: 0 },
-      stiffness: 0.001, // Very soft spring
-      damping: 0.1 // High damping prevents infinite wobbling
+      stiffness: 0.1, // Stiff enough to hold them
+      damping: 0.8 // High damping to prevent shaking
     })
     
-    Composite.add(engine.world, spring)
-
-    // Initial gentle push
-    Matter.Body.setVelocity(body, { 
-      x: (Math.random() - 0.5) * 5, 
-      y: (Math.random() - 0.5) * 5 
-    })
-    Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.02)
-    
-    return body
+    Composite.add(engine.world, [body, spring])
+    cardBodies.push(body)
+    cardSprings.push(spring)
   })
-
-  Composite.add(engine.world, cardBodies)
 
   // Mouse interaction
   const mouse = Mouse.create(containerRef.value)
@@ -224,14 +238,24 @@ onMounted(async () => {
   Matter.Events.on(engine, 'afterUpdate', () => {
     cardBodies.forEach((body, i) => {
       
-      // Keep it safely upright (Avoids NaN bug from applying Torque with Infinite inertia)
-      if (!isNaN(body.angle) && !mouseConstraint.body) {
+      // Fallback rescue if physics engine explodes with NaN
+      if (isNaN(body.position.x) || isNaN(body.position.y) || isNaN(body.angle)) {
+        const el = cardOuterRefs.value[i]
+        if (el) {
+          // Rescue layout: Just space them out manually so they don't stack at 0,0
+          el.style.transform = `translate(${100 + i * 50}px, ${100 + i * 50}px)`
+        }
+        return; // Skip physics math for this corrupted body
+      }
+
+      // Physics logic
+      if (!mouseConstraint.body && hasShattered.value) {
         // Gently pull angle to 0 like it has a heavy bottom
         Matter.Body.setAngle(body, body.angle * 0.9);
         Matter.Body.setAngularVelocity(body, body.angularVelocity * 0.85);
       }
 
-      // Safe Velocity Clamping (Prevents NaN explosion if physics glitch)
+      // Safe Velocity Clamping
       const maxVelocity = 40;
       const speed = Math.sqrt(body.velocity.x ** 2 + body.velocity.y ** 2);
       
@@ -241,14 +265,10 @@ onMounted(async () => {
           x: body.velocity.x * ratio,
           y: body.velocity.y * ratio
         });
-      } else if (speed === Infinity || isNaN(speed)) {
-        // Rescue logic if it exploded
-        Matter.Body.setVelocity(body, { x: 0, y: 0 });
       }
 
       const el = cardOuterRefs.value[i]
-      // Only apply CSS if we have valid numbers
-      if (el && !isNaN(body.position.x) && !isNaN(body.position.y) && !isNaN(body.angle)) {
+      if (el) {
         const x = body.position.x - el.offsetWidth / 2
         const y = body.position.y - el.offsetHeight / 2
         el.style.transform = `translate(${x}px, ${y}px) rotate(${body.angle}rad)`
@@ -259,6 +279,34 @@ onMounted(async () => {
   runner = Runner.create()
   Runner.run(runner, engine)
   
+  // THE SHATTER TRIGGER
+  ScrollTrigger.create({
+    trigger: sectionRef.value,
+    start: "top 40%", 
+    once: true,
+    onEnter: () => {
+      hasShattered.value = true;
+      
+      cardBodies.forEach((body, i) => {
+        // 1. Relax the springs completely so they float
+        const spring = cardSprings[i]
+        spring.stiffness = 0.0005 // Very loose rubber band
+        spring.damping = 0.1
+        
+        // 2. Massive explosive force outwards from the center!
+        const forceX = body.position.x > width / 2 ? 10 : -10;
+        const forceY = body.position.y > height / 2 ? 10 : -10;
+        
+        Matter.Body.setVelocity(body, { 
+          x: forceX + (Math.random() - 0.5) * 10, 
+          y: forceY + (Math.random() - 0.5) * 10 
+        });
+        
+        Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.15);
+      });
+    }
+  })
+
   resizeObserver = new ResizeObserver(() => {
     if (!containerRef.value) return
     width = containerRef.value.clientWidth
@@ -277,23 +325,27 @@ onUnmounted(() => {
 })
 
 const onCardEnter = (index: number) => {
+  if (!hasShattered.value) return
   activeCard.value = index
   const innerCard = cardOuterRefs.value[index].querySelector('.inner-tilt-card')
   gsap.to(innerCard, { scale: 1.03, duration: 0.4, ease: "power2.out" })
 }
 
 const onCardLeave = (index: number) => {
+  if (!hasShattered.value) return
   activeCard.value = null
   const innerCard = cardOuterRefs.value[index].querySelector('.inner-tilt-card')
   gsap.to(innerCard, { scale: 1, duration: 0.7, ease: "elastic.out(1, 0.5)" })
 }
 
 const onCardDown = (index: number) => {
+  if (!hasShattered.value) return
   const innerCard = cardOuterRefs.value[index].querySelector('.inner-tilt-card')
   gsap.to(innerCard, { scale: 0.98, duration: 0.2, ease: "power2.out" })
 }
 
 const onCardUp = (index: number) => {
+  if (!hasShattered.value) return
   const innerCard = cardOuterRefs.value[index].querySelector('.inner-tilt-card')
   gsap.to(innerCard, { scale: 1.03, duration: 0.4, ease: "back.out(1.5)" })
 }
