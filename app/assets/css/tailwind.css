@@ -60,18 +60,57 @@
   .clip-reveal-active {
     clip-path: inset(0 0% 0 0);
   }
+
+  /* Global Cursor Override */
+  .hide-default-cursor,
+  .hide-default-cursor * {
+    cursor: none !important;
+  }
+
+  /* Hide Scrollbar Utility */
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Custom Webkit Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--bg-elevated);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--bg-primary);
+  }
 }
 
-/* Page Transitions */
-.page-enter-active,
-.page-leave-active {
-  transition: all 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+@layer components {
+  .btn-special {
+    @apply border border-white/20 transition-all duration-300;
+    box-shadow: 4px 4px 0 0 var(--accent);
+  }
+  .btn-special:hover {
+    box-shadow: 6px 6px 0 0 var(--accent);
+    transform: translate(-2px, -2px);
+  }
+  .btn-special:active {
+    box-shadow: 0px 0px 0 0 var(--accent);
+    transform: translate(4px, 4px);
+  }
 }
-.page-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
-.page-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
-}
+
+

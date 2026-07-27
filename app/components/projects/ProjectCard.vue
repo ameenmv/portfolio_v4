@@ -1,20 +1,23 @@
 <template>
-  <NuxtLink :to="`/projects/${slug}`" class="block group" data-hover-text="View">
+  <NuxtLink 
+    :to="`/projects/${slug}`" 
+    class="block group" 
+    data-cursor-type="project"
+    @mouseenter="isHovered = true"
+    @mouseleave="isHovered = false"
+  >
     <div class="relative w-full rounded-2xl overflow-hidden bg-bg-elevated aspect-[4/3] mb-6 clip-reveal" ref="cardRef">
-      <!-- Image/Video -->
-      <NuxtImg 
+      <!-- WebGL Image Distortion -->
+      <WebGLImageWarp 
         v-if="image"
         :src="image"
         :alt="title"
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        :is-hovered="isHovered"
       />
       <div v-else class="w-full h-full flex flex-col items-center justify-center border border-white/5 bg-bg-elevated transition-transform duration-700 group-hover:scale-105">
         <span class="text-text-secondary font-mono text-sm opacity-50">{{ title }}</span>
         <span class="text-xs text-text-secondary opacity-30 mt-2">Placeholder</span>
       </div>
-      
-      <!-- Overlay -->
-      <div class="absolute inset-0 bg-bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
     </div>
     
     <!-- Meta -->
@@ -43,6 +46,7 @@ import { ref, onMounted } from 'vue'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '~/composables/useReducedMotion'
+import WebGLImageWarp from './WebGLImageWarp.vue'
 
 const props = defineProps({
   title: { type: String, required: true },
@@ -53,6 +57,7 @@ const props = defineProps({
 })
 
 const cardRef = ref<HTMLElement | null>(null)
+const isHovered = ref(false)
 const { isReducedMotion } = useReducedMotion()
 
 onMounted(() => {

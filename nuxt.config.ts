@@ -18,10 +18,28 @@ export default defineNuxtConfig({
 
   googleFonts: {
     families: {
-      'Space Grotesk': [400, 500, 600, 700],
-      'Inter': [300, 400, 500, 600]
+      'Space+Grotesk': [400, 500, 600, 700],
+      Inter: [400, 500, 600, 700],
+      'JetBrains+Mono': [400]
     },
-    display: 'swap'
+    display: 'swap',
+    prefetch: true,
+    preconnect: true,
+    preload: true
+  },
+  
+  image: {
+    format: ['webp', 'avif'],
+    quality: 80,
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+      '2xl': 1536
+    }
   },
 
   app: {
@@ -36,10 +54,9 @@ export default defineNuxtConfig({
         { hid: 'description', name: 'description', content: 'Mid-Level Front-End Developer specializing in Vue.js & Nuxt.js ecosystems.' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/png', href: '/ameeen.png' }
       ]
-    },
-    pageTransition: { name: 'page', mode: 'out-in' }
+    }
   },
 
   build: {

@@ -55,10 +55,10 @@ import { ArrowUp, Github, Linkedin, Youtube, Code2 } from 'lucide-vue-next'
 import { useNuxtApp } from '#imports'
 
 const socialLinks = [
-  { name: 'GitHub', url: 'https://github.com', icon: Github },
-  { name: 'LinkedIn', url: 'https://linkedin.com', icon: Linkedin },
-  { name: 'YouTube', url: 'https://youtube.com', icon: Youtube },
-  { name: 'npm', url: 'https://npmjs.com', icon: Code2 }
+  { name: 'GitHub', url: 'https://github.com/ameeenmv', icon: Github },
+  { name: 'LinkedIn', url: 'https://linkedin.com/in/ameeenmv', icon: Linkedin },
+  { name: 'YouTube', url: 'https://youtube.com/@ameeenmv', icon: Youtube },
+  { name: 'npm', url: 'https://npmjs.com/~ameeenmv', icon: Code2 }
 ]
 
 const scrollToTop = () => {
